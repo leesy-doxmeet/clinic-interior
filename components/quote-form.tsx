@@ -125,7 +125,7 @@ export function QuoteForm() {
             </div>
             <DialogTitle className="text-xl">의사가 만나는 의사 닥스밋</DialogTitle>
             <DialogDescription className="pt-1 text-base">
-              닥스밋 담당자가 빠른시일 내 연락드리겠습니다. 더 빠른 안내는 070-7834-8371로 연락 부탁드립니다.
+              닥스밋 담당자가 빠른시일 내 연락드리겠습니다.<br />더 빠른 안내는 070-7834-8371로 연락 부탁드립니다.
             </DialogDescription>
           </DialogHeader>
           <DialogClose asChild>

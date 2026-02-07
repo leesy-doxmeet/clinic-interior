@@ -39,7 +39,6 @@ export function SiteHeader() {
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3">
         {/* Left: Logo + Title */}
         <div className="flex min-w-0 items-center gap-3">
-          {/* DOXMEET 로고 */}
           <a
             href="https://www.doxmeet.com"
             target="_blank"
@@ -57,7 +56,6 @@ export function SiteHeader() {
             />
           </a>
 
-          {/* 타이틀/설명 (모바일에서 줄바꿈/말줄임 안전) */}
           <div className="min-w-0 leading-tight">
             <div className="truncate text-base font-semibold text-foreground sm:text-lg">
               인테리어 업체 모음
@@ -70,7 +68,6 @@ export function SiteHeader() {
 
         {/* Right: Desktop buttons */}
         <div className="hidden items-center gap-2 sm:flex">
-          {/* ✅ 같은 색(= outline)으로 통일 */}
           <Button variant="outline" asChild className="h-9">
             <a
               href="https://doxtalk.com"
@@ -100,29 +97,35 @@ export function SiteHeader() {
                 <SheetTitle>메뉴</SheetTitle>
               </SheetHeader>
 
-              <div className="mt-6 space-y-3">
-                <Button variant="outline" asChild className="w-full">
+              {/* ======= 여기부터가 새 디자인 ======= */}
+              <div className="mt-6">
+                <nav>
                   <a
                     href="https://doxtalk.com"
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={() => setOpen(false)}
+                    className="block py-4 text-base font-semibold text-foreground"
                   >
                     KMA 연수교육 캘린더
                   </a>
-                </Button>
 
-                <Button variant="outline" asChild className="w-full">
-                  <Link href="/register" onClick={() => setOpen(false)}>
+                  <div className="border-t border-border" />
+
+                  <Link
+                    href="/register"
+                    onClick={() => setOpen(false)}
+                    className="block py-4 text-base font-semibold text-foreground"
+                  >
                     업체 등록하기
                   </Link>
-                </Button>
+                </nav>
 
-                {/* 모바일에서 설명도 보여주고 싶으면 */}
-                <p className="pt-2 text-xs leading-relaxed text-muted-foreground">
+                <p className="mt-4 text-xs leading-relaxed text-muted-foreground">
                   닥스밋에서 모은 병원 인테리어 업체 리스트입니다. 지속적으로 업데이트 됩니다.
                 </p>
               </div>
+              {/* ======= 여기까지 새 디자인 ======= */}
             </SheetContent>
           </Sheet>
         </div>
