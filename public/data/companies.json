@@ -1,0 +1,506 @@
+[
+  {
+    "id": 1,
+    "name": "우리집 인테리어 디자인",
+    "region": "서울",
+    "logo": "/logos/1.png",
+    "instagram": "",
+    "website": "https://medinterior.com/?gad_source=1&gad_campaignid=21188085806&gbraid=0AAAAAoSXXyrUkbCHkcvW8z17fgP2SVqGc&gclid=Cj0KCQjwgvnCBhCqARIsADBLZoJClEnIXJt8qzSxg52Fw_foNBUqgoSyWrjsRERsXhCgT-fCXL50hiUaAhe-EALw_wcB",
+    "description": ""
+  },
+  {
+    "id": 2,
+    "name": "아가디자인",
+    "region": "서울",
+    "logo": "/logos/2.png",
+    "instagram": "",
+    "website": "https://www.aga1.co.kr/?gad_source=1&gad_campaignid=22319335879&gbraid=0AAAAA_AWtMoVBgyKmuMvi8dzDdk8oaezx&gclid=Cj0KCQjwgvnCBhCqARIsADBLZoITeXLDNPATEjist-YKyQQ2gaGFVuECXtUwLF52MTVcqwpNzIg7LOcaAhLUEALw_wcB",
+    "description": ""
+  },
+  {
+    "id": 3,
+    "name": "(주)현대리바트",
+    "region": "서울",
+    "logo": "/logos/3.png",
+    "instagram": "https://www.instagram.com/hyundailivart_official/",
+    "website": "",
+    "description": ""
+  },
+  {
+    "id": 4,
+    "name": "(주)가건종합건설",
+    "region": "서울",
+    "logo": "/logos/4.png",
+    "instagram": "",
+    "website": "",
+    "description": ""
+  },
+  {
+    "id": 5,
+    "name": "(주)가담어소시에이츠",
+    "region": "서울",
+    "logo": "/logos/5.png",
+    "instagram": "https://www.instagram.com/jung_im1215/",
+    "website": "",
+    "description": ""
+  },
+  {
+    "id": 6,
+    "name": "(주)금강엔터프라이즈",
+    "region": "서울",
+    "logo": "/logos/6.png",
+    "instagram": "https://www.instagram.com/keumkang_design/",
+    "website": "",
+    "description": ""
+  },
+  {
+    "id": 7,
+    "name": "(주)다성에스앤디",
+    "region": "서울",
+    "logo": "/logos/7.png",
+    "instagram": "",
+    "website": "",
+    "description": ""
+  },
+  {
+    "id": 8,
+    "name": "(주)더지음건축",
+    "region": "경기",
+    "logo": "/logos/8.png",
+    "instagram": "https://www.instagram.com/the_jeeum/",
+    "website": "",
+    "description": ""
+  },
+  {
+    "id": 9,
+    "name": "(주)디자인앤빌더아키텍쳐",
+    "region": "서울",
+    "logo": "",
+    "instagram": "",
+    "website": "",
+    "description": ""
+  },
+  {
+    "id": 10,
+    "name": "(주)디자인에이웍스",
+    "region": "서울",
+    "logo": "/logos/10.png",
+    "instagram": "",
+    "website": "",
+    "description": ""
+  },
+  {
+    "id": 11,
+    "name": "(주)디자인코드아이디",
+    "region": "경기",
+    "logo": "/logos/11.png",
+    "instagram": "",
+    "website": "",
+    "description": ""
+  },
+  {
+    "id": 12,
+    "name": "숲다지인하우스",
+    "region": "서울",
+    "logo": "/logos/12.png",
+    "instagram": "https://www.instagram.com/soop_dh_interieo/",
+    "website": "",
+    "description": ""
+  },
+  {
+    "id": 13,
+    "name": "(주)모투스컴퍼니",
+    "region": "서울",
+    "logo": "/logos/13.png",
+    "instagram": "",
+    "website": "http://www.pwad.co.kr/work/portfolio/",
+    "description": ""
+  },
+  {
+    "id": 14,
+    "name": "(주)모던상사",
+    "region": "충북",
+    "logo": "/logos/14.png",
+    "instagram": "",
+    "website": "https://modern-cp.kr/",
+    "description": ""
+  },
+  {
+    "id": 15,
+    "name": "(주)보명아이디",
+    "region": "서울",
+    "logo": "/logos/15.png",
+    "instagram": "",
+    "website": "https://www.bmid.co.kr/",
+    "description": ""
+  },
+  {
+    "id": 16,
+    "name": "(주)비웍스디자인",
+    "region": "서울",
+    "logo": "/logos/16.png",
+    "instagram": "https://www.instagram.com/bworks_design/",
+    "website": "https://b-works.co.kr/",
+    "description": ""
+  },
+  {
+    "id": 17,
+    "name": "컨터",
+    "region": "서울",
+    "logo": "/logos/17.png",
+    "instagram": "https://www.instagram.com/studio_conteur/",
+    "website": "https://studio-conteur.com/conteur",
+    "description": ""
+  },
+  {
+    "id": 18,
+    "name": "시옷스페이스",
+    "region": "서울",
+    "logo": "/logos/18.png",
+    "instagram": "https://www.instagram.com/siotspace/",
+    "website": "https://siotspace.com/Projects",
+    "description": ""
+  },
+  {
+    "id": 19,
+    "name": "(주)빅휘시커뮤니케이션즈",
+    "region": "서울",
+    "logo": "/logos/19.png",
+    "instagram": "",
+    "website": "http://bigfishcomm.com/",
+    "description": ""
+  },
+  {
+    "id": 20,
+    "name": "(주)아이시디스페이스",
+    "region": "서울",
+    "logo": "/logos/20.png",
+    "instagram": "",
+    "website": "https://icdspace.co.kr/",
+    "description": ""
+  },
+  {
+    "id": 21,
+    "name": "여다듬",
+    "region": "대전",
+    "logo": "/logos/21.png",
+    "instagram": "https://www.instagram.com/yeodadeum_official/",
+    "website": "https://www.ydddoor.com/",
+    "description": ""
+  },
+  {
+    "id": 22,
+    "name": "미고인테리어",
+    "region": "대전",
+    "logo": "/logos/22.png",
+    "instagram": "https://www.instagram.com/kimnayoon_79",
+    "website": "https://migoin.kr",
+    "description": ""
+  },
+  {
+    "id": 23,
+    "name": "위너디자인",
+    "region": "대전",
+    "logo": "/logos/23.png",
+    "instagram": "https://www.instagram.com/winnerdesign_/",
+    "website": "http://winnerdesign.co.kr/home/main.php",
+    "description": ""
+  },
+  {
+    "id": 24,
+    "name": "인테리어준마루포항점",
+    "region": "경북",
+    "logo": "",
+    "instagram": "https://www.instagram.com/interieojunmaru/",
+    "website": "",
+    "description": ""
+  },
+  {
+    "id": 25,
+    "name": "손수건축인테리어디자인",
+    "region": "충북",
+    "logo": "/logos/25.png",
+    "instagram": "https://www.instagram.com/kimseongpil6665?igshid=YmMyMTA2M2Y=",
+    "website": "https://blog.naver.com/ksp0927",
+    "description": ""
+  },
+  {
+    "id": 26,
+    "name": "디자인더문",
+    "region": "충남",
+    "logo": "/logos/26.png",
+    "instagram": "https://www.instagram.com/design._.the_moon/",
+    "website": "https://m.blog.naver.com/themoon619?tab=1",
+    "description": ""
+  },
+  {
+    "id": 27,
+    "name": "노아인테리어",
+    "region": "경북",
+    "logo": "/logos/27.png",
+    "instagram": "https://www.instagram.com/noa_interior_/",
+    "website": "",
+    "description": ""
+  },
+  {
+    "id": 28,
+    "name": "인테리어디자인류",
+    "region": "경북",
+    "logo": "/logos/28.png",
+    "instagram": "https://www.instagram.com/inter.ior_ryu/",
+    "website": "",
+    "description": ""
+  },
+  {
+    "id": 29,
+    "name": "대미안",
+    "region": "경남",
+    "logo": "/logos/29.png",
+    "instagram": "https://www.instagram.com/daemian_design/",
+    "website": "http://daemian.co.kr/?fbclid=PAZXh0bgNhZW0CMTEAAadUZp-9M4M5hBY6Q-3-S5zJYKQ1DrBsOq24m2RptUC4NWe-BEHel75MDISO4g_aem_DmOksX0z0bfUoVqx947I1w",
+    "description": ""
+  },
+  {
+    "id": 30,
+    "name": "인테리어베이",
+    "region": "서울,경기",
+    "logo": "/logos/30.png",
+    "instagram": "https://www.instagram.com/interior_bay/",
+    "website": "http://43www.interiorbay.co.kr/index.html",
+    "description": ""
+  },
+  {
+    "id": 31,
+    "name": "아우르다스튜디오",
+    "region": "제주",
+    "logo": "",
+    "instagram": "https://www.instagram.com/aurda.studio/",
+    "website": "https://blog.naver.com/aurdastudio",
+    "description": ""
+  },
+  {
+    "id": 32,
+    "name": "109인테리어",
+    "region": "서울",
+    "logo": "/logos/32.png",
+    "instagram": "https://www.instagram.com/109.interior_official/",
+    "website": "https://www.109interior.com/",
+    "description": ""
+  },
+  {
+    "id": 33,
+    "name": "홈시크",
+    "region": "서울",
+    "logo": "",
+    "instagram": "https://www.instagram.com/homechic_design/",
+    "website": "",
+    "description": ""
+  },
+  {
+    "id": 34,
+    "name": "(주)림디자인",
+    "region": "서울",
+    "logo": "",
+    "instagram": "https://www.instagram.com/rimdesignco/",
+    "website": "",
+    "description": ""
+  },
+  {
+    "id": 35,
+    "name": "주식회사어울림디자인",
+    "region": "대전",
+    "logo": "/logos/35.png",
+    "instagram": "",
+    "website": "http://m.oulimdesign.com/",
+    "description": ""
+  },
+  {
+    "id": 36,
+    "name": "더인터플랜주식회사",
+    "region": "대전",
+    "logo": "/logos/36.png",
+    "instagram": "",
+    "website": "https://interplaner.kr/inter/bbs/board.php?bo_table=gallery&sca=%EC%A0%84%EC%8B%9C",
+    "description": ""
+  },
+  {
+    "id": 37,
+    "name": "홀리데이랩 디자인스튜디오",
+    "region": "서울",
+    "logo": "/logos/37.png",
+    "instagram": "https://www.instagram.com/holidaylab_official/",
+    "website": "https://www.holidaylab.co/about",
+    "description": ""
+  },
+  {
+    "id": 38,
+    "name": "씨오엠",
+    "region": "서울",
+    "logo": "/logos/38.png",
+    "instagram": "https://www.instagram.com/c_o_m.kr/",
+    "website": "https://c-o-m.kr/?fbclid=PAZXh0bgNhZW0CMTEAAafPeLUp-zRI_o2p2xnXZiufqcbwOSB5Ve_mrijZalbnP1hihMjWs9z51LDFQQ_aem_4ex0v2Abcb1C1X-ugoDrag",
+    "description": ""
+  },
+  {
+    "id": 39,
+    "name": "아키모스피어",
+    "region": "서울",
+    "logo": "/logos/39.png",
+    "instagram": "https://www.instagram.com/archi_mosphere/",
+    "website": "https://www.instagram.com/archi_mosphere/",
+    "description": ""
+  },
+  {
+    "id": 40,
+    "name": "논스페이스",
+    "region": "서울",
+    "logo": "/logos/40.png",
+    "instagram": "https://www.instagram.com/nonespace_official/",
+    "website": "https://l.instagram.com/?u=http%3A%2F%2Fnone-space.com%2F%3Ffbclid%3DPAZXh0bgNhZW0CMTEAAacremEpDD038cgvvqs1smLc2iYy6sRzNMtSTyXXPmuitMpBIkk8kfIBXQtBiA_aem_KSL_g8jb7yDGwLczTbsPqw&e=AT16_a67br8ok9SzUzVavmC7c750YpZ5ARxAAxKGbN4STXluwgXKfvVjyXflDo0hIRnmSdILnf-14yyWyU9ka5ALpXyhcin4N5rCVA",
+    "description": ""
+  },
+  {
+    "id": 41,
+    "name": "알트디자인",
+    "region": "서울",
+    "logo": "/logos/41.png",
+    "instagram": "",
+    "website": "https://blog.naver.com/lhj6980",
+    "description": ""
+  },
+  {
+    "id": 42,
+    "name": "엠비피",
+    "region": "서울",
+    "logo": "/logos/42.png",
+    "instagram": "https://www.instagram.com/make_better_place",
+    "website": "https://www.makebetterplace.com/contact",
+    "description": ""
+  },
+  {
+    "id": 43,
+    "name": "바이페디자인",
+    "region": "서울",
+    "logo": "/logos/43.png",
+    "instagram": "https://www.instagram.com/byfedesign_official/",
+    "website": "",
+    "description": ""
+  },
+  {
+    "id": 44,
+    "name": "(주)제이더블유씨그룹",
+    "region": "서울",
+    "logo": "/logos/44.png",
+    "instagram": "https://www.instagram.com/jwc__group",
+    "website": "http://jwcgroup.co.kr/main.php?n_media=27758&n_query=%EC%B9%98%EA%B3%BC%EC%9D%B8%ED%85%8C%EB%A6%AC%EC%96%B4%EC%97%85%EC%B2%B4&n_rank=4&n_ad_group=grp-a001-01-000000043013482&n_ad=nad-a001-01-000000343428428&n_keyword_id=nkw-a001-01-000006315316641&n_keyword=%EC%B9%98%EA%B3%BC%EC%9D%B8%ED%85%8C%EB%A6%AC%EC%96%B4%EC%97%85%EC%B2%B4&n_campaign_type=1&n_ad_group_type=1&n_match=1&NaPm=ct%3Dmcmp7lwc%7Cci%3DERd63dbea1%2D57ab%2D11f0%2D841d%2D9e66de9da1ba%7Ctr%3Dsa%7Chk%3D534f4b3fa3c186460b8a191c651ae8514152f0fa%7Cnacn%3DeXcaCQB2JMEyB",
+    "description": ""
+  },
+  {
+    "id": 45,
+    "name": "디자인온다",
+    "region": "서울",
+    "logo": "/logos/45.png",
+    "instagram": "https://www.instagram.com/designonda_official/?n_media=27758&n_query=%EC%B9%98%EA%B3%BC%EC%9D%B8%ED%85%8C%EB%A6%AC%EC%96%B4%EC%97%85%EC%B2%B4&n_rank=6&n_ad_group=grp-a001-01-000000043059557&n_ad=nad-a001-01-000000307512694&n_keyword_id=nkw-a001-01-000006322984538&n_keyword=%EC%B9%98%EA%B3%BC%EC%9D%B8%ED%85%8C%EB%A6%AC%EC%96%B4%EC%97%85%EC%B2%B4&n_campaign_type=1&n_ad_group_type=1&n_match=1",
+    "website": "",
+    "description": ""
+  },
+  {
+    "id": 46,
+    "name": "인디박스",
+    "region": "경기",
+    "logo": "/logos/46.png",
+    "instagram": "",
+    "website": "https://indebox.co.kr/product/list.html?cate_no=115&n_media=122875&n_query=%EC%B9%98%EA%B3%BC%EC%9D%B8%ED%85%8C%EB%A6%AC%EC%96%B4%EC%97%85%EC%B2%B4&n_rank=5&n_ad_group=grp-a001-01-000000051653767&n_ad=nad-a001-01-000000392169407&n_keyword_id=nkw-a001-01-000007276722597&n_keyword=%EC%B9%98%EA%B3%BC%EC%9D%B8%ED%85%8C%EB%A6%AC%EC%96%B4%EC%97%85%EC%B2%B4&n_campaign_type=1&n_ad_group_type=1&n_match=1&NaPm=ct%3Dmcmppp15%7Cci%3DERcd39eec8%2D57ad%2D11f0%2D85d5%2D5614482dbc67%7Ctr%3Dsa%7Chk%3D1cc55d689ed72ff35bde9efa812f406ef23a03e9%7Cnacn%3DOseIDYhFYcT0A",
+    "description": ""
+  },
+  {
+    "id": 47,
+    "name": "공간의힘",
+    "region": "대구",
+    "logo": "/logos/47.png",
+    "instagram": "https://www.instagram.com/gonghim_",
+    "website": "https://www.gonghim.com/?n_media=122875&n_query=%EC%B9%98%EA%B3%BC%EC%9D%B8%ED%85%8C%EB%A6%AC%EC%96%B4%EC%97%85%EC%B2%B4&n_rank=2&n_ad_group=grp-m001-01-000001982980187&n_ad=nad-a001-01-000000013524725&n_keyword_id=nkw-m001-01-000001982980820&n_keyword=%EC%B9%98%EA%B3%BC%EC%9D%B8%ED%85%8C%EB%A6%AC%EC%96%B4%EC%97%85%EC%B2%B4&n_campaign_type=1&n_ad_group_type=1&n_match=1&NaPm=ct%3Dmcmpx0uu%7Cci%3DER99065448%2D57ae%2D11f0%2Dbf88%2D0eb350014825%7Ctr%3Dsa%7Chk%3D464ed906c5c208b36867524a7c88e4e10157d5ea%7Cnacn%3Db7MSBswCZWnv",
+    "description": ""
+  },
+  {
+    "id": 48,
+    "name": "굿앤컴퍼니",
+    "region": "서울",
+    "logo": "/logos/48.png",
+    "instagram": "https://www.instagram.com/gnc_interior_design/",
+    "website": "https://www.goodncompany.kr/index.html",
+    "description": ""
+  },
+  {
+    "id": 49,
+    "name": "디자인프레임",
+    "region": "대구",
+    "logo": "",
+    "instagram": "",
+    "website": "https://www.designframe.co.kr/?utm_source=chatgpt.com",
+    "description": ""
+  },
+  {
+    "id": 50,
+    "name": "스튜디오알디",
+    "region": "대구",
+    "logo": "/logos/50.png",
+    "instagram": "https://www.instagram.com/0fficial_rd/",
+    "website": "https://studiord.co.kr/about?utm_source=chatgpt.com",
+    "description": ""
+  },
+  {
+    "id": 51,
+    "name": "무아디자인",
+    "region": "서울",
+    "logo": "/logos/51.png",
+    "instagram": "https://www.instagram.com/mooadesign_/#",
+    "website": "https://mooadesign.co.kr/index",
+    "description": ""
+  },
+  {
+    "id": 52,
+    "name": "㈜ 디자인투톤",
+    "region": "서울",
+    "logo": "/logos/52.png",
+    "instagram": "https://www.instagram.com/design2tone_official",
+    "website": "https://www.design2tone.space/?utm_source=chatgpt.com",
+    "description": ""
+  },
+  {
+    "id": 53,
+    "name": "오애프알디자인스튜디오",
+    "region": "서울",
+    "logo": "/logos/53.png",
+    "instagram": "https://www.instagram.com/ofr_design",
+    "website": "https://ofr.co.kr/about?utm_source=chatgpt.com",
+    "description": ""
+  },
+  {
+    "id": 54,
+    "name": "요토공간",
+    "region": "서울",
+    "logo": "/logos/54.png",
+    "instagram": "https://www.instagram.com/yoto.space/",
+    "website": "https://yotospace.com/70?utm_source=chatgpt.com",
+    "description": ""
+  },
+  {
+    "id": 55,
+    "name": "예원디자인",
+    "region": "경기",
+    "logo": "/logos/55.png",
+    "instagram": "https://www.instagram.com/yewon_design?igsh=MTF6Njhpb3B4dnpwbg%3D%3D",
+    "website": "https://yewoninterior.com/bbs/board.php?bo_table=officeinterior",
+    "description": ""
+  },
+  {
+    "id": 56,
+    "name": "이음건설",
+    "region": "제주",
+    "logo": "/logos/56.png",
+    "instagram": "",
+    "website": "https://www.leumcc.co.kr/?gad_source=1&gad_campaignid=21880783174&gbraid=0AAAAA-GK3IALZBxcZ5_P7fRrcAMTrnRtF&gclid=CjwKCAjwg7PDBhBxEiwAf1CVuw9RWQ5hN-c4eUKTKKDqvJn_QyROWGpTaCpphjM2r1TVIEBNGAkrJxoC1hUQAvD_BwE",
+    "description": ""
+  }
+]

@@ -1,56 +1,132 @@
 "use client"
 
-import Link from "next/link"
-import { Building2, Menu, X } from "lucide-react"
 import { useState } from "react"
+import Image from "next/image"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet"
+
+function MenuIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      {...props}
+    >
+      <line x1="3" y1="6" x2="21" y2="6" />
+      <line x1="3" y1="12" x2="21" y2="12" />
+      <line x1="3" y1="18" x2="21" y2="18" />
+    </svg>
+  )
+}
 
 export function SiteHeader() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [open, setOpen] = useState(false)
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-card">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-        <Link href="/" className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-            <Building2 className="h-5 w-5 text-primary-foreground" />
-          </div>
-          <span className="text-lg font-bold text-foreground">
-            DOXMEET
-          </span>
-          <span className="hidden text-sm font-medium text-muted-foreground sm:inline">
-            인테리어 디렉토리
-          </span>
-        </Link>
+    <header className="w-full border-b border-border bg-white">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3">
+        {/* Left: Logo + Title */}
+        <div className="flex min-w-0 items-center gap-3">
+          {/* DOXMEET 로고 */}
+          <a
+            href="https://www.doxmeet.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="relative h-8 w-28 shrink-0 sm:w-36"
+            aria-label="DOXMEET"
+          >
+            <Image
+              src="/logos/doxmeet.png"
+              alt="DOXMEET"
+              fill
+              className="object-contain object-left"
+              sizes="144px"
+              priority
+            />
+          </a>
 
-        {/* Desktop buttons */}
-        <nav className="hidden items-center gap-2 md:flex">
-          <Button variant="outline" asChild>
+          {/* 타이틀/설명 (모바일에서 줄바꿈/말줄임 안전) */}
+          <div className="min-w-0 leading-tight">
+            <div className="truncate text-base font-semibold text-foreground sm:text-lg">
+              인테리어 업체 모음
+            </div>
+            <div className="hidden truncate text-xs text-muted-foreground sm:block">
+              닥스밋에서 모은 병원 인테리어 업체 리스트입니다. 지속적으로 업데이트 됩니다.
+            </div>
+          </div>
+        </div>
+
+        {/* Right: Desktop buttons */}
+        <div className="hidden items-center gap-2 sm:flex">
+          {/* ✅ 같은 색(= outline)으로 통일 */}
+          <Button variant="outline" asChild className="h-9">
+            <a
+              href="https://doxtalk.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              KMA 연수교육 캘린더
+            </a>
+          </Button>
+
+          <Button variant="outline" asChild className="h-9">
             <Link href="/register">업체 등록하기</Link>
           </Button>
-        </nav>
-
-        {/* Mobile hamburger */}
-        <button
-          type="button"
-          className="flex items-center justify-center rounded-md p-2 text-muted-foreground md:hidden"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          aria-label={mobileMenuOpen ? "메뉴 닫기" : "메뉴 열기"}
-        >
-          {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-        </button>
-      </div>
-
-      {/* Mobile menu */}
-      {mobileMenuOpen && (
-        <div className="border-t border-border bg-card px-4 pb-4 pt-2 md:hidden">
-          <nav className="flex flex-col gap-2">
-            <Button variant="outline" asChild className="w-full bg-transparent" onClick={() => setMobileMenuOpen(false)}>
-              <Link href="/register">업체 등록하기</Link>
-            </Button>
-          </nav>
         </div>
-      )}
+
+        {/* Mobile: hamburger -> Sheet */}
+        <div className="sm:hidden">
+          <Sheet open={open} onOpenChange={setOpen}>
+            <SheetTrigger asChild>
+              <Button variant="outline" size="icon" className="h-9 w-9">
+                <MenuIcon className="h-5 w-5" />
+              </Button>
+            </SheetTrigger>
+
+            <SheetContent side="right" className="w-[280px]">
+              <SheetHeader>
+                <SheetTitle>메뉴</SheetTitle>
+              </SheetHeader>
+
+              <div className="mt-6 space-y-3">
+                <Button variant="outline" asChild className="w-full">
+                  <a
+                    href="https://doxtalk.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => setOpen(false)}
+                  >
+                    KMA 연수교육 캘린더
+                  </a>
+                </Button>
+
+                <Button variant="outline" asChild className="w-full">
+                  <Link href="/register" onClick={() => setOpen(false)}>
+                    업체 등록하기
+                  </Link>
+                </Button>
+
+                {/* 모바일에서 설명도 보여주고 싶으면 */}
+                <p className="pt-2 text-xs leading-relaxed text-muted-foreground">
+                  닥스밋에서 모은 병원 인테리어 업체 리스트입니다. 지속적으로 업데이트 됩니다.
+                </p>
+              </div>
+            </SheetContent>
+          </Sheet>
+        </div>
+      </div>
     </header>
   )
 }

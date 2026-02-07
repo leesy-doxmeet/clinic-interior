@@ -1,53 +1,156 @@
-import Link from "next/link"
 import Image from "next/image"
+import Link from "next/link"
 
 export function SiteFooter() {
   return (
     <footer className="border-t border-border bg-card text-muted-foreground">
       <div className="mx-auto max-w-6xl px-4 py-8">
-        {/* Top row: logo + nav links */}
+        {/* Top row: logo + policy links */}
         <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
-          <Link href="/" className="relative h-8 w-32">
+          {/* 로고 클릭 시 doxmeet.com 이동 */}
+          <a
+            href="https://www.doxmeet.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="relative h-8 w-32"
+            aria-label="DOXMEET 공식 홈페이지"
+          >
             <Image
-              src="/logos/doxmeet-logo.jpg"
+              src="/logos/doxmeet.png"
               alt="DOXMEET 로고"
               fill
               className="object-contain object-left"
               sizes="128px"
             />
-          </Link>
+          </a>
+
           <nav className="flex flex-wrap items-center gap-4 text-sm">
-            <Link
-              href="/terms"
+            <a
+              href="https://www.doxmeet.com/about/tos"
+              target="_blank"
+              rel="noopener noreferrer"
               className="transition-colors hover:text-foreground"
             >
               이용약관
-            </Link>
+            </a>
+
             <span className="text-border">|</span>
-            <Link
-              href="/sitemap-page"
+
+            <a
+              href="https://www.doxmeet.com/about/privacy"
+              target="_blank"
+              rel="noopener noreferrer"
               className="transition-colors hover:text-foreground"
             >
+              개인정보처리방침
+            </a>
+
+            <span className="text-border">|</span>
+
+            <Link href="/sitemap-page" className="transition-colors hover:text-foreground">
               사이트맵
             </Link>
           </nav>
         </div>
 
         {/* Divider */}
-        <div className="my-5 h-px bg-border" />
+        <div className="my-6 h-px bg-border" />
+
+        {/* ✅ Footer sitemap (SEO용 내부 링크 강화) */}
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+          {/* 인테리어 서비스 */}
+          <div>
+            <p className="text-sm font-semibold text-foreground">닥스밋 인테리어</p>
+            <ul className="mt-3 space-y-2 text-sm">
+              <li>
+                <Link href="/" className="transition-colors hover:text-foreground">
+                  인테리어 업체 모음
+                </Link>
+              </li>
+              <li>
+                <Link href="/register" className="transition-colors hover:text-foreground">
+                  업체 등록하기
+                </Link>
+              </li>
+              <li>
+                <Link href="/quote" className="transition-colors hover:text-foreground">
+                  무료 개원 상담 신청
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* KMA 서비스 */}
+          <div>
+            <p className="text-sm font-semibold text-foreground">KMA 서비스</p>
+            <ul className="mt-3 space-y-2 text-sm">
+              <li>
+                <a
+                  href="https://doxtalk.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="transition-colors hover:text-foreground"
+                >
+                  KMA 연수교육 캘린더
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* DOXMEET */}
+          <div>
+            <p className="text-sm font-semibold text-foreground">DOXMEET</p>
+            <ul className="mt-3 space-y-2 text-sm">
+              <li>
+                <a
+                  href="https://www.doxmeet.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="transition-colors hover:text-foreground"
+                >
+                  닥스밋 공식홈페이지
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://www.doxmeet.com/about/tos"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="transition-colors hover:text-foreground"
+                >
+                  이용약관
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://www.doxmeet.com/about/privacy"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="transition-colors hover:text-foreground"
+                >
+                  개인정보처리방침
+                </a>
+              </li>
+              <li>
+                <Link href="/sitemap-page" className="transition-colors hover:text-foreground">
+                  사이트맵
+                </Link>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Divider */}
+        <div className="my-6 h-px bg-border" />
 
         {/* Info section */}
         <div className="space-y-1.5 text-xs leading-relaxed">
           <p>
             <span className="font-medium text-foreground">닥스밋(DOXMEET)</span>
-            {" | 대표 : 홍길동 | 사업자등록번호 : 000-00-00000"}
+            {" | 대표 : 홍진우 | 사업자등록번호 : 385-88-02455"}
           </p>
-          <p>
-            {"주소 : 서울특별시 강남구 테헤란로 123, 4층"}
-          </p>
-          <p>
-            {"Tel : 02-000-0000 | Fax : 02-000-0001 | Email : contact@doxmeet.kr"}
-          </p>
+          <p>{"주소 : 서울특별시 성동구 연무장 15길 11 에스팩토리 B동 스파크플러스 207호"}</p>
+          <p>{"Tel : 070-7834-8371 | Email : leesy@doxmeet.com"}</p>
         </div>
 
         {/* Copyright */}

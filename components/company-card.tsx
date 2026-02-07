@@ -1,20 +1,33 @@
 import Image from "next/image"
 import { Instagram, Globe, MapPin } from "lucide-react"
 import type { Company } from "@/lib/companies"
+import { useState } from "react"
 
 export function CompanyCard({ company }: { company: Company }) {
+  const [imgError, setImgError] = useState(false)
+
+  const hasLogo = Boolean(company.logo) && !imgError
+
   return (
     <div className="group rounded-xl border border-border bg-card p-5 transition-shadow hover:shadow-md">
       <div className="flex items-start gap-4">
-        {/* Logo */}
-        <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg">
-          <Image
-            src={company.logo || "/placeholder.svg"}
-            alt={`${company.name} 로고`}
-            fill
-            className="object-cover"
-            sizes="56px"
-          />
+        {/* Logo 영역 */}
+        <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-muted flex items-center justify-center">
+          {hasLogo ? (
+            <Image
+              src={company.logo}
+              alt={`${company.name} 로고`}
+              fill
+              className="object-contain bg-white"
+              sizes="56px"
+              onError={() => setImgError(true)}
+            />
+          ) : (
+            // 로고 없거나 깨졌을 때 대체 UI
+            <div className="flex h-full w-full items-center justify-center bg-primary/10 text-primary font-semibold text-lg">
+              {company.name?.charAt(0) || "?"}
+            </div>
+          )}
         </div>
 
         <div className="flex min-w-0 flex-1 items-start justify-between gap-3">
@@ -22,6 +35,7 @@ export function CompanyCard({ company }: { company: Company }) {
             <h3 className="truncate text-base font-semibold text-card-foreground">
               {company.name}
             </h3>
+
             <div className="mt-1.5 flex items-center gap-1 text-sm text-muted-foreground">
               <MapPin className="h-3.5 w-3.5 shrink-0" />
               <span>{company.region}</span>

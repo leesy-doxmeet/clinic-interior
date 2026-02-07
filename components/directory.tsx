@@ -1,53 +1,68 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useEffect, useMemo, useState } from "react"
 import Link from "next/link"
-import { Search, ChevronDown, SlidersHorizontal, FileText, ChevronLeft, ChevronRight } from "lucide-react"
-import { companies, REGIONS } from "@/lib/companies"
+import { Search, FileText, ChevronLeft, ChevronRight } from "lucide-react"
+import type { Company } from "@/lib/companies"
 import { CompanyCard } from "@/components/company-card"
 
 const ITEMS_PER_PAGE = 20
 
 export function Directory() {
-  const [selectedRegion, setSelectedRegion] = useState("전체")
+  const [companies, setCompanies] = useState<Company[]>([])
+  const [loading, setLoading] = useState(true)
+
   const [excludeSeoul, setExcludeSeoul] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
   const [currentPage, setCurrentPage] = useState(1)
 
+  // ✅ public/data/companies.json에서 업체 목록 불러오기
+  useEffect(() => {
+    let alive = true
+    setLoading(true)
+
+    fetch("/data/companies.json", { cache: "no-store" })
+      .then((res) => res.json())
+      .then((data) => {
+        if (!alive) return
+        setCompanies(Array.isArray(data) ? data : [])
+      })
+      .catch((err) => {
+        console.error("companies.json load error:", err)
+        if (!alive) return
+        setCompanies([])
+      })
+      .finally(() => {
+        if (!alive) return
+        setLoading(false)
+      })
+
+    return () => {
+      alive = false
+    }
+  }, [])
+
   const filteredCompanies = useMemo(() => {
     return companies.filter((company) => {
-      // Region filter
-      if (selectedRegion !== "전체" && company.region !== selectedRegion) {
-        return false
+      if (excludeSeoul && company.region === "서울") return false
+
+      if (searchQuery) {
+        const q = searchQuery.toLowerCase()
+        const nameOk = (company.name || "").toLowerCase().includes(q)
+        const descOk = (company.description || "").toLowerCase().includes(q)
+        if (!nameOk && !descOk) return false
       }
-      // Exclude Seoul
-      if (excludeSeoul && company.region === "서울") {
-        return false
-      }
-      // Search query
-      if (
-        searchQuery &&
-        !company.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
-        !company.description?.toLowerCase().includes(searchQuery.toLowerCase())
-      ) {
-        return false
-      }
+
       return true
     })
-  }, [selectedRegion, excludeSeoul, searchQuery])
+  }, [companies, excludeSeoul, searchQuery])
 
-  // Reset page when filters change
-  const totalPages = Math.ceil(filteredCompanies.length / ITEMS_PER_PAGE)
+  const totalPages = Math.max(1, Math.ceil(filteredCompanies.length / ITEMS_PER_PAGE))
   const paginatedCompanies = filteredCompanies.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
   )
 
-  // Reset to page 1 when filters change
-  const handleRegionChange = (value: string) => {
-    setSelectedRegion(value)
-    setCurrentPage(1)
-  }
   const handleExcludeSeoulChange = (checked: boolean) => {
     setExcludeSeoul(checked)
     setCurrentPage(1)
@@ -61,39 +76,8 @@ export function Directory() {
     <div>
       {/* Filter bar */}
       <div className="rounded-xl border border-border bg-card p-4">
-        <div className="flex items-center gap-2 pb-3 text-sm font-medium text-foreground">
-          <SlidersHorizontal className="h-4 w-4" />
-          <span>필터</span>
-        </div>
+        {/* ✅ 모바일: 세로(검색 아래 체크박스) / 데스크탑: 가로(검색 오른쪽 체크박스) */}
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-          {/* Region dropdown */}
-          <div className="relative">
-            <select
-              value={selectedRegion}
-              onChange={(e) => handleRegionChange(e.target.value)}
-              className="h-10 w-full appearance-none rounded-lg border border-input bg-background py-2 pl-3 pr-9 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring sm:w-40"
-              aria-label="지역 선택"
-            >
-              {REGIONS.map((region) => (
-                <option key={region} value={region}>
-                  {region}
-                </option>
-              ))}
-            </select>
-            <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          </div>
-
-          {/* Exclude Seoul checkbox */}
-          <label className="flex cursor-pointer items-center gap-2 text-sm text-foreground">
-            <input
-              type="checkbox"
-              checked={excludeSeoul}
-              onChange={(e) => handleExcludeSeoulChange(e.target.checked)}
-              className="h-4 w-4 rounded border-input accent-primary"
-            />
-            <span>서울 제외 보기</span>
-          </label>
-
           {/* Search input */}
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -106,6 +90,17 @@ export function Directory() {
               aria-label="업체명 검색"
             />
           </div>
+
+          {/* ✅ 서울 제외 보기: 데스크탑에서는 검색창 오른쪽 / 모바일에서는 검색창 아래 */}
+          <label className="flex cursor-pointer items-center gap-2 text-sm text-foreground sm:shrink-0">
+            <input
+              type="checkbox"
+              checked={excludeSeoul}
+              onChange={(e) => handleExcludeSeoulChange(e.target.checked)}
+              className="h-4 w-4 rounded border-input accent-primary"
+            />
+            <span>서울 제외 보기</span>
+          </label>
         </div>
       </div>
 
@@ -127,31 +122,32 @@ export function Directory() {
             <FileText className="h-5 w-5" />
           </div>
           <div>
-            <p className="text-base font-semibold text-foreground">닥스밋에 견적 요청하기</p>
+            <p className="text-base font-semibold text-foreground">닥스밋 무료 개원 상담 신청</p>
             <p className="mt-1 text-sm text-muted-foreground">
               기본정보를 입력해주시면 닥스밋 담당이 연락드립니다.
             </p>
           </div>
         </Link>
 
-        {paginatedCompanies.length > 0 ? (
-          paginatedCompanies.map((company) => (
-            <CompanyCard key={company.id} company={company} />
-          ))
+        {loading ? (
+          <div className="col-span-full rounded-xl border border-dashed border-border bg-card py-16 text-center">
+            <p className="text-base font-medium text-foreground">업체 목록 불러오는 중...</p>
+            <p className="mt-1 text-sm text-muted-foreground">잠시만 기다려주세요</p>
+          </div>
+        ) : paginatedCompanies.length > 0 ? (
+          paginatedCompanies.map((company) => <CompanyCard key={company.id} company={company} />)
         ) : (
-          <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border bg-card py-16 text-center">
+          <div className="col-span-full flex flex-col items-center justify-center rounded-xl border border-dashed border-border bg-card py-16 text-center">
             <Search className="mb-3 h-10 w-10 text-muted-foreground/40" />
             <p className="text-base font-medium text-foreground">검색 결과가 없습니다</p>
-            <p className="mt-1 text-sm text-muted-foreground">
-              다른 검색어나 필터를 사용해 보세요
-            </p>
+            <p className="mt-1 text-sm text-muted-foreground">다른 검색어를 사용해 보세요</p>
           </div>
         )}
       </div>
 
       {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="mt-6 flex items-center justify-center gap-2">
+      {!loading && totalPages > 1 && (
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
           <button
             type="button"
             onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
