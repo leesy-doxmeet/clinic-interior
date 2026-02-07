@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://doxtalk.co.kr/sitemap.xml
