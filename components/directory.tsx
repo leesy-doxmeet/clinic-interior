@@ -2,24 +2,23 @@
 
 import { useEffect, useMemo, useState } from "react"
 import Link from "next/link"
-import { Search, FileText, ChevronLeft, ChevronRight } from "lucide-react"
+import { Search, FileText, ChevronLeft, ChevronRight, ChevronDown, ChevronUp } from "lucide-react"
 import type { Company } from "@/lib/companies"
 import { CompanyCard } from "@/components/company-card"
 
-const ITEMS_PER_PAGE = 20
+const ITEMS_PER_PAGE = 19
 
-// ✅ 데이터에 실제로 있는 지역 약칭 기준으로 옵션 구성
-// 필요하면 여기만 수정하면 됨
+// ✅ 요청한 순서로 고정 (복수선택 가능)
 const REGION_OPTIONS = [
   "서울",
   "경기",
   "충북",
   "충남",
+  "전북",
+  "전남",
   "경북",
   "경남",
-  "대전",
-  "대구",
-  "광주",
+  "강원",
   "제주",
 ] as const
 
@@ -39,6 +38,8 @@ export function Directory() {
 
   const [excludeSeoul, setExcludeSeoul] = useState(false)
   const [selectedRegions, setSelectedRegions] = useState<Region[]>([])
+  const [regionPanelOpen, setRegionPanelOpen] = useState(false)
+
   const [searchQuery, setSearchQuery] = useState("")
   const [currentPage, setCurrentPage] = useState(1)
 
@@ -123,6 +124,8 @@ export function Directory() {
     setCurrentPage(1)
   }
 
+  const selectedCount = selectedRegions.length
+
   return (
     <div>
       {/* Filter bar */}
@@ -155,44 +158,67 @@ export function Directory() {
             </label>
           </div>
 
-          {/* Row 2: 지역 다중선택 */}
+          {/* Row 2: 지역선택 버튼 (처음엔 숨김, 누르면 펼쳐짐) */}
           <div className="flex flex-col gap-2">
-            <div className="flex items-center justify-between gap-2">
-              <p className="text-sm text-muted-foreground">
-                지역 선택 (복수 선택 가능)
-              </p>
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setRegionPanelOpen((v) => !v)}
+                className="inline-flex h-10 items-center gap-2 rounded-lg border border-border bg-background px-3 text-sm font-medium text-foreground transition-colors hover:bg-accent"
+                aria-expanded={regionPanelOpen}
+                aria-controls="region-panel"
+              >
+                지역선택
+                {selectedCount > 0 && (
+                  <span className="rounded-md bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary">
+                    {selectedCount}개 선택
+                  </span>
+                )}
+                {regionPanelOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+              </button>
 
-              {selectedRegions.length > 0 && (
+              {selectedCount > 0 && (
                 <button
                   type="button"
                   onClick={clearRegions}
-                  className="text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground"
+                  className="h-10 rounded-lg px-3 text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground"
                 >
                   선택 해제
                 </button>
               )}
             </div>
 
-            <div className="flex flex-wrap gap-2">
-              {REGION_OPTIONS.map((region) => {
-                const active = selectedRegions.includes(region)
-                return (
-                  <button
-                    key={region}
-                    type="button"
-                    onClick={() => toggleRegion(region)}
-                    className={`h-9 rounded-lg px-3 text-sm font-medium transition-colors ${
-                      active
-                        ? "bg-primary text-primary-foreground"
-                        : "border border-border bg-background text-foreground hover:bg-accent"
-                    }`}
-                    aria-pressed={active}
-                  >
-                    {region}
-                  </button>
-                )
-              })}
-            </div>
+            {/* 펼쳐지는 지역 체크박스 패널 */}
+            {regionPanelOpen && (
+              <div
+                id="region-panel"
+                className="rounded-xl border border-border bg-background p-3"
+              >
+                <p className="mb-2 text-sm text-muted-foreground">
+                  지역 선택 (복수 선택 가능)
+                </p>
+
+                <div className="grid grid-cols-2 gap-2 sm:grid-cols-5">
+                  {REGION_OPTIONS.map((region) => {
+                    const checked = selectedRegions.includes(region)
+                    return (
+                      <label
+                        key={region}
+                        className="flex cursor-pointer items-center gap-2 rounded-lg border border-border bg-card px-3 py-2 text-sm hover:bg-accent"
+                      >
+                        <input
+                          type="checkbox"
+                          checked={checked}
+                          onChange={() => toggleRegion(region)}
+                          className="h-4 w-4 rounded border-input accent-primary"
+                        />
+                        <span className="text-foreground">{region}</span>
+                      </label>
+                    )
+                  })}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
