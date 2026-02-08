@@ -2,7 +2,14 @@
 
 import { useEffect, useMemo, useState } from "react"
 import Link from "next/link"
-import { Search, FileText, ChevronLeft, ChevronRight, ChevronDown, ChevronUp } from "lucide-react"
+import {
+  Search,
+  FileText,
+  ChevronLeft,
+  ChevronRight,
+  ChevronDown,
+  ChevronUp,
+} from "lucide-react"
 import type { Company } from "@/lib/companies"
 import { CompanyCard } from "@/components/company-card"
 
@@ -32,11 +39,20 @@ function parseRegions(value: string | undefined | null): string[] {
     .filter(Boolean)
 }
 
+// ✅ 인스타/웹 존재 여부 점수: 2(둘다) > 1(하나) > 0(없음)
+function linkScore(c: Company) {
+  const hasInstagram =
+    typeof c.instagram === "string" && c.instagram.trim() !== ""
+  const hasWebsite =
+    typeof c.website === "string" && c.website.trim() !== ""
+
+  return (hasInstagram ? 1 : 0) + (hasWebsite ? 1 : 0)
+}
+
 export function Directory() {
   const [companies, setCompanies] = useState<Company[]>([])
   const [loading, setLoading] = useState(true)
 
-  const [excludeSeoul, setExcludeSeoul] = useState(false)
   const [selectedRegions, setSelectedRegions] = useState<Region[]>([])
   const [regionPanelOpen, setRegionPanelOpen] = useState(false)
 
@@ -70,13 +86,11 @@ export function Directory() {
   }, [])
 
   const filteredCompanies = useMemo(() => {
-    return companies.filter((company) => {
-      const regions = parseRegions(company.region) // ["서울","경기"] 형태
+    // 1) FILTER
+    const filtered = companies.filter((company) => {
+      const regions = parseRegions(company.region)
 
-      // ✅ 서울 제외 (단일/복수 모두 처리)
-      if (excludeSeoul && regions.includes("서울")) return false
-
-      // ✅ 다중 지역 필터(OR): 선택된 지역이 하나라도 포함되면 통과
+      // ✅ 지역 필터(OR): 선택된 지역이 하나라도 포함되면 통과
       if (selectedRegions.length > 0) {
         const hit = selectedRegions.some((r) => regions.includes(r))
         if (!hit) return false
@@ -92,18 +106,25 @@ export function Directory() {
 
       return true
     })
-  }, [companies, excludeSeoul, selectedRegions, searchQuery])
+
+    // 2) SORT: (둘다 링크) > (하나 링크) > (없음)  + 같은 그룹은 가나다순
+    return filtered
+      .slice()
+      .sort((a, b) => {
+        const sdiff = linkScore(b) - linkScore(a)
+        if (sdiff !== 0) return sdiff
+
+        const an = (a.name ?? "").trim()
+        const bn = (b.name ?? "").trim()
+        return an.localeCompare(bn, "ko-KR")
+      })
+  }, [companies, selectedRegions, searchQuery])
 
   const totalPages = Math.max(1, Math.ceil(filteredCompanies.length / ITEMS_PER_PAGE))
   const paginatedCompanies = filteredCompanies.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
   )
-
-  const handleExcludeSeoulChange = (checked: boolean) => {
-    setExcludeSeoul(checked)
-    setCurrentPage(1)
-  }
 
   const handleSearchChange = (value: string) => {
     setSearchQuery(value)
@@ -131,7 +152,7 @@ export function Directory() {
       {/* Filter bar */}
       <div className="rounded-xl border border-border bg-card p-4">
         <div className="flex flex-col gap-3">
-          {/* Row 1: Search + 서울 제외 */}
+          {/* Row 1: Search + 지역선택 버튼 */}
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
             {/* Search input */}
             <div className="relative flex-1">
@@ -146,87 +167,86 @@ export function Directory() {
               />
             </div>
 
-            {/* 서울 제외 보기 */}
-            <label className="flex cursor-pointer items-center gap-2 text-sm text-foreground sm:shrink-0">
-              <input
-                type="checkbox"
-                checked={excludeSeoul}
-                onChange={(e) => handleExcludeSeoulChange(e.target.checked)}
-                className="h-4 w-4 rounded border-input accent-primary"
-              />
-              <span>서울 제외 보기</span>
-            </label>
-          </div>
-
-          {/* Row 2: 지역선택 버튼 (처음엔 숨김, 누르면 펼쳐짐) */}
-          <div className="flex flex-col gap-2">
-            <div className="flex flex-wrap items-center gap-2">
+            {/* 지역선택 버튼 */}
+            <div className="sm:shrink-0">
               <button
                 type="button"
                 onClick={() => setRegionPanelOpen((v) => !v)}
-                className="inline-flex h-10 items-center gap-2 rounded-lg border border-border bg-background px-3 text-sm font-medium text-foreground transition-colors hover:bg-accent"
+                className="inline-flex h-10 w-full items-center justify-between gap-2 rounded-lg border border-border bg-background px-3 text-sm font-medium text-foreground transition-colors hover:bg-accent sm:w-auto"
                 aria-expanded={regionPanelOpen}
                 aria-controls="region-panel"
               >
-                지역선택
-                {selectedCount > 0 && (
-                  <span className="rounded-md bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary">
-                    {selectedCount}개 선택
-                  </span>
+                <span className="inline-flex items-center gap-2">
+                  지역선택
+                  {selectedCount > 0 && (
+                    <span className="rounded-md bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary">
+                      {selectedCount}개
+                    </span>
+                  )}
+                </span>
+                {regionPanelOpen ? (
+                  <ChevronUp className="h-4 w-4" />
+                ) : (
+                  <ChevronDown className="h-4 w-4" />
                 )}
-                {regionPanelOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
               </button>
-
-              {selectedCount > 0 && (
-                <button
-                  type="button"
-                  onClick={clearRegions}
-                  className="h-10 rounded-lg px-3 text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground"
-                >
-                  선택 해제
-                </button>
-              )}
             </div>
+          </div>
 
-            {/* 펼쳐지는 지역 체크박스 패널 */}
-            {regionPanelOpen && (
-              <div
-                id="region-panel"
-                className="rounded-xl border border-border bg-background p-3"
-              >
-                <p className="mb-2 text-sm text-muted-foreground">
+          {/* Row 2: 펼쳐지는 지역 체크박스 패널 */}
+          {regionPanelOpen && (
+            <div
+              id="region-panel"
+              className="rounded-xl border border-border bg-background p-3"
+            >
+              <div className="mb-2 flex items-center justify-between gap-2">
+                <p className="text-sm text-muted-foreground">
                   지역 선택 (복수 선택 가능)
                 </p>
 
-                <div className="grid grid-cols-2 gap-2 sm:grid-cols-5">
-                  {REGION_OPTIONS.map((region) => {
-                    const checked = selectedRegions.includes(region)
-                    return (
-                      <label
-                        key={region}
-                        className="flex cursor-pointer items-center gap-2 rounded-lg border border-border bg-card px-3 py-2 text-sm hover:bg-accent"
-                      >
-                        <input
-                          type="checkbox"
-                          checked={checked}
-                          onChange={() => toggleRegion(region)}
-                          className="h-4 w-4 rounded border-input accent-primary"
-                        />
-                        <span className="text-foreground">{region}</span>
-                      </label>
-                    )
-                  })}
-                </div>
+                {selectedCount > 0 && (
+                  <button
+                    type="button"
+                    onClick={clearRegions}
+                    className="text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground"
+                  >
+                    선택 해제
+                  </button>
+                )}
               </div>
-            )}
-          </div>
+
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-5">
+                {REGION_OPTIONS.map((region) => {
+                  const checked = selectedRegions.includes(region)
+                  return (
+                    <label
+                      key={region}
+                      className="flex cursor-pointer items-center gap-2 rounded-lg border border-border bg-card px-3 py-2 text-sm hover:bg-accent"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={checked}
+                        onChange={() => toggleRegion(region)}
+                        className="h-4 w-4 rounded border-input accent-primary"
+                      />
+                      <span className="text-foreground">{region}</span>
+                    </label>
+                  )
+                })}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
       {/* Results count */}
       <div className="mt-4 flex items-center justify-between px-1">
         <p className="text-sm text-muted-foreground">
-          총 <span className="font-semibold text-foreground">{filteredCompanies.length}</span>개 업체
+          총{" "}
+          <span className="font-semibold text-foreground">
+            {filteredCompanies.length}
+          </span>
+          개 업체
         </p>
       </div>
 
@@ -241,7 +261,9 @@ export function Directory() {
             <FileText className="h-5 w-5" />
           </div>
           <div>
-            <p className="text-base font-semibold text-foreground">닥스밋 무료 개원 상담 신청</p>
+            <p className="text-base font-semibold text-foreground">
+              닥스밋 무료 개원 상담 신청
+            </p>
             <p className="mt-1 text-sm text-muted-foreground">
               기본정보를 입력해주시면 닥스밋 담당이 연락드립니다.
             </p>
@@ -250,16 +272,26 @@ export function Directory() {
 
         {loading ? (
           <div className="col-span-full rounded-xl border border-dashed border-border bg-card py-16 text-center">
-            <p className="text-base font-medium text-foreground">업체 목록 불러오는 중...</p>
-            <p className="mt-1 text-sm text-muted-foreground">잠시만 기다려주세요</p>
+            <p className="text-base font-medium text-foreground">
+              업체 목록 불러오는 중...
+            </p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              잠시만 기다려주세요
+            </p>
           </div>
         ) : paginatedCompanies.length > 0 ? (
-          paginatedCompanies.map((company) => <CompanyCard key={company.id} company={company} />)
+          paginatedCompanies.map((company) => (
+            <CompanyCard key={company.id} company={company} />
+          ))
         ) : (
           <div className="col-span-full flex flex-col items-center justify-center rounded-xl border border-dashed border-border bg-card py-16 text-center">
             <Search className="mb-3 h-10 w-10 text-muted-foreground/40" />
-            <p className="text-base font-medium text-foreground">검색 결과가 없습니다</p>
-            <p className="mt-1 text-sm text-muted-foreground">다른 검색어를 사용해 보세요</p>
+            <p className="text-base font-medium text-foreground">
+              검색 결과가 없습니다
+            </p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              다른 검색어를 사용해 보세요
+            </p>
           </div>
         )}
       </div>
