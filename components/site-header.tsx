@@ -66,28 +66,46 @@ export function SiteHeader() {
           </div>
         </div>
 
-        {/* Right: Desktop buttons */}
-        <div className="hidden items-center gap-2 sm:flex">
-          <Button variant="outline" asChild className="h-9">
+        {/* Right: Desktop links (same click area, only visual changed) */}
+        <div className="hidden items-center sm:flex">
+          <Button
+            variant="ghost"
+            asChild
+            className="h-9 px-0 text-sm font-medium text-foreground hover:bg-transparent"
+          >
             <a
               href="https://doxtalk.com"
               target="_blank"
               rel="noopener noreferrer"
+              className="px-2"
             >
               KMA 연수교육 캘린더
             </a>
           </Button>
 
-          <Button variant="outline" asChild className="h-9">
-            <Link href="/register">업체 등록하기</Link>
+          {/* 세로 구분선 */}
+          <span className="mx-2 select-none text-muted-foreground">|</span>
+
+          <Button
+            variant="ghost"
+            asChild
+            className="h-9 px-0 text-sm font-medium text-foreground hover:bg-transparent"
+          >
+            <Link href="/register" className="px-2">
+              업체 등록하기
+            </Link>
           </Button>
         </div>
 
-        {/* Mobile: hamburger -> Sheet */}
+        {/* Mobile: hamburger -> Sheet (no border, icon only) */}
         <div className="sm:hidden">
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-              <Button variant="outline" size="icon" className="h-9 w-9">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-9 w-9 border-0 shadow-none hover:bg-transparent"
+              >
                 <MenuIcon className="h-5 w-5" />
               </Button>
             </SheetTrigger>
