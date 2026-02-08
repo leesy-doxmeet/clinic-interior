@@ -11,7 +11,10 @@ const notoSansKr = Noto_Sans_KR({
 })
 
 export const metadata: Metadata = {
-  title: "DOXMEET 인테리어 디렉토리",
+  title: "병원인테리어 업체모음",
+  icons: {
+    icon: "/favicon.ico"
+  },
   description: "의사가 만나는 의사 닥스밋 - 병원 인테리어 업체를 한눈에 비교하세요",
 }
 

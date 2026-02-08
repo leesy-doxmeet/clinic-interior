@@ -8,11 +8,37 @@ import { CompanyCard } from "@/components/company-card"
 
 const ITEMS_PER_PAGE = 20
 
+// ✅ 데이터에 실제로 있는 지역 약칭 기준으로 옵션 구성
+// 필요하면 여기만 수정하면 됨
+const REGION_OPTIONS = [
+  "서울",
+  "경기",
+  "충북",
+  "충남",
+  "경북",
+  "경남",
+  "대전",
+  "대구",
+  "광주",
+  "제주",
+] as const
+
+type Region = (typeof REGION_OPTIONS)[number]
+
+// ✅ "서울,경기" / "경기 " 같은 값을 ["서울","경기"] 형태로 표준화
+function parseRegions(value: string | undefined | null): string[] {
+  return String(value ?? "")
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean)
+}
+
 export function Directory() {
   const [companies, setCompanies] = useState<Company[]>([])
   const [loading, setLoading] = useState(true)
 
   const [excludeSeoul, setExcludeSeoul] = useState(false)
+  const [selectedRegions, setSelectedRegions] = useState<Region[]>([])
   const [searchQuery, setSearchQuery] = useState("")
   const [currentPage, setCurrentPage] = useState(1)
 
@@ -44,8 +70,18 @@ export function Directory() {
 
   const filteredCompanies = useMemo(() => {
     return companies.filter((company) => {
-      if (excludeSeoul && company.region === "서울") return false
+      const regions = parseRegions(company.region) // ["서울","경기"] 형태
 
+      // ✅ 서울 제외 (단일/복수 모두 처리)
+      if (excludeSeoul && regions.includes("서울")) return false
+
+      // ✅ 다중 지역 필터(OR): 선택된 지역이 하나라도 포함되면 통과
+      if (selectedRegions.length > 0) {
+        const hit = selectedRegions.some((r) => regions.includes(r))
+        if (!hit) return false
+      }
+
+      // ✅ 검색(업체명/설명)
       if (searchQuery) {
         const q = searchQuery.toLowerCase()
         const nameOk = (company.name || "").toLowerCase().includes(q)
@@ -55,7 +91,7 @@ export function Directory() {
 
       return true
     })
-  }, [companies, excludeSeoul, searchQuery])
+  }, [companies, excludeSeoul, selectedRegions, searchQuery])
 
   const totalPages = Math.max(1, Math.ceil(filteredCompanies.length / ITEMS_PER_PAGE))
   const paginatedCompanies = filteredCompanies.slice(
@@ -67,8 +103,23 @@ export function Directory() {
     setExcludeSeoul(checked)
     setCurrentPage(1)
   }
+
   const handleSearchChange = (value: string) => {
     setSearchQuery(value)
+    setCurrentPage(1)
+  }
+
+  const toggleRegion = (region: Region) => {
+    setSelectedRegions((prev) => {
+      const exists = prev.includes(region)
+      const next = exists ? prev.filter((r) => r !== region) : [...prev, region]
+      return next
+    })
+    setCurrentPage(1)
+  }
+
+  const clearRegions = () => {
+    setSelectedRegions([])
     setCurrentPage(1)
   }
 
@@ -76,31 +127,73 @@ export function Directory() {
     <div>
       {/* Filter bar */}
       <div className="rounded-xl border border-border bg-card p-4">
-        {/* ✅ 모바일: 세로(검색 아래 체크박스) / 데스크탑: 가로(검색 오른쪽 체크박스) */}
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-          {/* Search input */}
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <input
-              type="text"
-              placeholder="업체명 검색..."
-              value={searchQuery}
-              onChange={(e) => handleSearchChange(e.target.value)}
-              className="h-10 w-full rounded-lg border border-input bg-background pl-9 pr-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-              aria-label="업체명 검색"
-            />
+        <div className="flex flex-col gap-3">
+          {/* Row 1: Search + 서울 제외 */}
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+            {/* Search input */}
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <input
+                type="text"
+                placeholder="업체명 검색..."
+                value={searchQuery}
+                onChange={(e) => handleSearchChange(e.target.value)}
+                className="h-10 w-full rounded-lg border border-input bg-background pl-9 pr-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                aria-label="업체명 검색"
+              />
+            </div>
+
+            {/* 서울 제외 보기 */}
+            <label className="flex cursor-pointer items-center gap-2 text-sm text-foreground sm:shrink-0">
+              <input
+                type="checkbox"
+                checked={excludeSeoul}
+                onChange={(e) => handleExcludeSeoulChange(e.target.checked)}
+                className="h-4 w-4 rounded border-input accent-primary"
+              />
+              <span>서울 제외 보기</span>
+            </label>
           </div>
 
-          {/* ✅ 서울 제외 보기: 데스크탑에서는 검색창 오른쪽 / 모바일에서는 검색창 아래 */}
-          <label className="flex cursor-pointer items-center gap-2 text-sm text-foreground sm:shrink-0">
-            <input
-              type="checkbox"
-              checked={excludeSeoul}
-              onChange={(e) => handleExcludeSeoulChange(e.target.checked)}
-              className="h-4 w-4 rounded border-input accent-primary"
-            />
-            <span>서울 제외 보기</span>
-          </label>
+          {/* Row 2: 지역 다중선택 */}
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center justify-between gap-2">
+              <p className="text-sm text-muted-foreground">
+                지역 선택 (복수 선택 가능)
+              </p>
+
+              {selectedRegions.length > 0 && (
+                <button
+                  type="button"
+                  onClick={clearRegions}
+                  className="text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground"
+                >
+                  선택 해제
+                </button>
+              )}
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              {REGION_OPTIONS.map((region) => {
+                const active = selectedRegions.includes(region)
+                return (
+                  <button
+                    key={region}
+                    type="button"
+                    onClick={() => toggleRegion(region)}
+                    className={`h-9 rounded-lg px-3 text-sm font-medium transition-colors ${
+                      active
+                        ? "bg-primary text-primary-foreground"
+                        : "border border-border bg-background text-foreground hover:bg-accent"
+                    }`}
+                    aria-pressed={active}
+                  >
+                    {region}
+                  </button>
+                )
+              })}
+            </div>
+          </div>
         </div>
       </div>
 
