@@ -158,6 +158,14 @@ const SERVER_ENDPOINTS = {
   getSummaryInsights: 'summary-insights',
 };
 
+const SERVER_ACTIONS = {
+  getBootstrapData: 'bootstrap',
+  resumeOrCreateDraft: 'resumeOrCreateDraft',
+  saveDraftStep: 'saveDraftStep',
+  submitDraft: 'submitDraft',
+  getSummaryInsights: 'getSummaryInsights',
+};
+
 const state = {
   bootstrap: null,
   loading: true,
@@ -318,18 +326,30 @@ function createDraftSkeleton() {
 
 function callServer(functionName, payload) {
   const endpointKey = SERVER_ENDPOINTS[functionName];
+  const actionKey = SERVER_ACTIONS[functionName];
   const apiBase = window.DOCTOR_CV_API_BASE || '/api/doctor-cv';
-  if (!endpointKey) {
+  const isDirectApi = /^https?:\/\//i.test(apiBase);
+  if (!endpointKey || !actionKey) {
     return Promise.reject(new Error('지원되지 않는 서버 요청입니다: ' + functionName));
   }
 
-  return fetch(apiBase + '/' + endpointKey, {
+  const requestUrl = isDirectApi ? apiBase : apiBase + '/' + endpointKey;
+  const requestPayload = typeof payload === 'undefined' ? {} : payload;
+  const requestBody = isDirectApi
+    ? {
+        action: actionKey,
+        payload: actionKey === 'bootstrap' ? undefined : requestPayload,
+      }
+    : requestPayload;
+
+  return fetch(requestUrl, {
     method: 'POST',
     cache: 'no-store',
+    redirect: 'follow',
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type': isDirectApi ? 'text/plain;charset=utf-8' : 'application/json',
     },
-    body: JSON.stringify(typeof payload === 'undefined' ? {} : payload),
+    body: JSON.stringify(requestBody),
   })
     .then(async function (response) {
       let parsed = null;

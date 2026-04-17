@@ -13,7 +13,7 @@ export default function HomePage() {
     <>
       <link rel="stylesheet" href="/doctor-cv-app.css" />
       <Script id="doctor-cv-config" strategy="beforeInteractive">
-        {`window.DOCTOR_CV_API_BASE = "/api/doctor-cv";`}
+        {`window.DOCTOR_CV_API_BASE = "https://script.google.com/macros/s/AKfycbwH7GaSiju9geEcNr2kjLo6_ZT27TAiZF8wfD6VW4-3Mqt52qQzIwZylTJERz-vAbAPsQ/exec";`}
       </Script>
       <Script
         src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"
