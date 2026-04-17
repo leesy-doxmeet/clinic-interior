@@ -254,7 +254,7 @@ export function Directory() {
       <div className="mt-3 grid gap-3 sm:grid-cols-2">
         {/* Quote CTA card - always first */}
         <Link
-          href="/quote"
+          href="/interior/quote"
           className="group relative flex flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed border-primary/40 bg-accent p-5 text-center transition-all hover:border-primary hover:bg-primary/10 hover:shadow-md"
         >
           <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground transition-transform group-hover:scale-110">

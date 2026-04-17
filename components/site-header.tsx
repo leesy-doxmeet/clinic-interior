@@ -91,7 +91,7 @@ export function SiteHeader() {
             asChild
             className="h-9 px-0 text-sm font-medium text-foreground hover:bg-transparent"
           >
-            <Link href="/register" className="px-2">
+            <Link href="/interior/register" className="px-2">
               업체 등록하기
             </Link>
           </Button>
@@ -131,7 +131,7 @@ export function SiteHeader() {
                   <div className="border-t border-border" />
 
                   <Link
-                    href="/register"
+                    href="/interior/register"
                     onClick={() => setOpen(false)}
                     className="block py-4 text-base font-semibold text-foreground"
                   >

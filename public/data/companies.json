@@ -502,5 +502,131 @@
     "instagram": "",
     "website": "https://www.leumcc.co.kr/?gad_source=1&gad_campaignid=21880783174&gbraid=0AAAAA-GK3IALZBxcZ5_P7fRrcAMTrnRtF&gclid=CjwKCAjwg7PDBhBxEiwAf1CVuw9RWQ5hN-c4eUKTKKDqvJn_QyROWGpTaCpphjM2r1TVIEBNGAkrJxoC1hUQAvD_BwE",
     "description": ""
+  },
+  {
+    "id": 57,
+    "name": "스튜디오 리닥",
+    "region": "광주",
+    "logo": "",
+    "instagram": "",
+    "website": "https://studioredoc.com/guide",
+    "description": ""
+  },
+  {
+    "id": 58,
+    "name": "다솔디자인",
+    "region": "서울",
+    "logo": "/logos/58.png",
+    "instagram": "",
+    "website": "https://dasole.kr/portfolio-1/?utm_source=googlekeywordad&utm_medium=googlesa&utm_campaign=hospitalinterior&utm_term=%7Bkeyword%7D&utm_content=SAcontent_1&gad_source=1&gad_campaignid=22167785453&gbraid=0AAAAACVUwpEENufn-uNbU6yg-FxnEly22&gclid=Cj0KCQiA4pvMBhDYARIsAGfgwvzoUG7BQ_kz6LTYsLzo33so1aFtRE0laFUykktQxi3DuB7_qgKCA1AaAoHwEALw_wcB",
+    "description": ""
+  },
+  {
+    "id": 59,
+    "name": "두드림디자인컴퍼니",
+    "region": "서울",
+    "logo": "/logos/59.png",
+    "instagram": "",
+    "website": "http://dodreamdc.co.kr/",
+    "description": ""
+  },
+  {
+    "id": 60,
+    "name": "인투익스",
+    "region": "서울",
+    "logo": "/logos/60.png",
+    "instagram": "https://www.instagram.com/intoex_design/",
+    "website": "http://www.intoex.co.kr/",
+    "description": ""
+  },
+  {
+    "id": 61,
+    "name": "㈜참신디자인",
+    "region": "서울",
+    "logo": "/logos/61.png",
+    "instagram": "https://www.instagram.com/charmshin_design/",
+    "website": "http://charmshin.com/page_yPKj89",
+    "description": ""
+  },
+  {
+    "id": 62,
+    "name": "㈜소통21/디자인오드",
+    "region": "서울",
+    "logo": "/logos/62.png",
+    "instagram": "https://www.instagram.com/designodd7/?igshid=YmMyMTA2M2Y%3D",
+    "website": "http://so-tong21.com/",
+    "description": ""
+  },
+  {
+    "id": 63,
+    "name": "메디데스크 ㈜공간연구소",
+    "region": "경기",
+    "logo": "",
+    "instagram": "https://www.instagram.com/medidesk_9space/#",
+    "website": "https://www.9space.co.kr/",
+    "description": ""
+  },
+  {
+    "id": 64,
+    "name": "스코디자인",
+    "region": "서울",
+    "logo": "/logos/64.png",
+    "instagram": "",
+    "website": "https://www.design-sco.com/",
+    "description": ""
+  },
+  {
+    "id": 65,
+    "name": "에픽인테리어스튜디오",
+    "region": "서울",
+    "logo": "/logos/65.png",
+    "instagram": "",
+    "website": "https://www.epic-interior.com/",
+    "description": ""
+  },
+  {
+    "id": 66,
+    "name": "페이브디자인",
+    "region": "서울",
+    "logo": "/logos/66.png",
+    "instagram": "https://www.instagram.com/pave__design/",
+    "website": "https://www.pavedesign.co.kr/",
+    "description": ""
+  },
+  {
+    "id": 67,
+    "name": "㈜우리의장",
+    "region": "경기",
+    "logo": "/logos/67.png",
+    "instagram": "https://www.instagram.com/wooriint/",
+    "website": "http://www.wooriint.co.kr/home/index.php",
+    "description": ""
+  },
+  {
+    "id": 68,
+    "name": "메이드바이",
+    "region": "서울",
+    "logo": "/logos/68.png",
+    "instagram": "",
+    "website": "http://www.made-by.co.kr/",
+    "description": ""
+  },
+  {
+    "id": 69,
+    "name": "그레이스",
+    "region": "서울",
+    "logo": "/logos/69.png",
+    "instagram": "",
+    "website": "https://www.gracedesign.co.kr/",
+    "description": ""
+  },
+  {
+    "id": 70,
+    "name": "핀토",
+    "region": "서울",
+    "logo": "/logos/70.png",
+    "instagram": "",
+    "website": "https://www.finto.co.kr/",
+    "description": ""
   }
 ]
