@@ -435,11 +435,18 @@ function renderApp() {
 
 function renderLoadingScreen() {
   return `
-    <main class="page-shell identity fade-up">
-      <section class="hero-panel dark">
-        <div class="eyebrow dark">setup</div>
-        <h1 class="hero-title">입력 화면을 준비하고 있습니다</h1>
-        <div class="hero-body">Google Sheets 연결 상태와 기본 설정을 확인한 뒤 곧바로 입력을 시작할 수 있도록 준비 중입니다.</div>
+    <main class="page-shell identity fade-up landing-loading-screen">
+      <section class="landing-loading-card">
+        <div class="landing-brand-lockup landing-loading-brand">
+          <img class="landing-brand-logo" src="/doxmeet-logo.svg" alt="닥스밋">
+          <div class="landing-brand-copy">
+            <div class="landing-brand-kicker">DOXMEET SERVICE</div>
+            <div class="landing-brand-name">닥스밋 의사 프로필</div>
+          </div>
+        </div>
+        <div class="landing-loading-spinner" aria-hidden="true"></div>
+        <h1 class="landing-loading-title">접속중입니다</h1>
+        <div class="landing-loading-body">닥스밋 서비스 화면을 준비하고 있습니다. 잠시만 기다려 주세요.</div>
       </section>
     </main>
   `;
@@ -505,9 +512,16 @@ function renderActiveScreen() {
 function renderLandingScreen() {
   return `
     <main class="page-shell landing-page fade-up">
-      <section class="hero-panel dark landing-hero-panel">
+      <section class="hero-panel landing-hero-panel">
         <div class="landing-hero-grid">
           <div class="landing-copy-stack">
+            <div class="landing-brand-lockup">
+              <img class="landing-brand-logo" src="/doxmeet-logo.svg" alt="닥스밋">
+              <div class="landing-brand-copy">
+                <div class="landing-brand-kicker">DOXMEET SERVICE</div>
+                <div class="landing-brand-name">닥스밋 의사 프로필</div>
+              </div>
+            </div>
             <div class="eyebrow dark">AI 검색 시대, 의사 프로필 선점</div>
             <h1 class="landing-hero-title">앞으로 환자는 병원이 아니라 의사를 AI로 찾습니다</h1>
             <div class="landing-hero-body">
@@ -678,7 +692,7 @@ function renderLandingScreen() {
       </section>
 
       <section class="landing-section stack-20 landing-closing-section">
-        <div class="hero-panel dark landing-final-panel">
+        <div class="hero-panel landing-final-panel">
           <div class="landing-final-copy">
             <h2 class="landing-final-title">선생님의 경력을 AI가 읽을 수 있는 상태로 바꿔두세요</h2>
             <p class="landing-final-body">흩어진 이력은 AI가 대신 정리해주지 않습니다. 지금 입력한 정보가 선생님의 의사 프로필이 되고, 무료 홈페이지 제작의 시작점이 됩니다.</p>
