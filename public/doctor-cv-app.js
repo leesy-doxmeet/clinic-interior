@@ -53,41 +53,41 @@ const SPECIALTY_OPTIONS = [
 
 const LANDING_REASON_CARDS = [
   {
-    title: '환자가 선생님을 더 쉽게 이해합니다',
-    body: '병원 이름뿐 아니라 학력, 수련, 경력, 진료 강점까지 함께 전달할 수 있습니다.',
+    title: '흩어진 병원 소개',
+    body: '병원 홈페이지에는 선생님의 전문 이력이 짧게만 표시되는 경우가 많습니다.',
   },
   {
-    title: 'AI가 읽기 쉬운 정보가 됩니다',
-    body: '이미지나 흩어진 소개글보다 항목별로 정리된 정보가 더 정확하게 해석됩니다.',
+    title: '빠져 있는 세부 경력',
+    body: '수련, 학회, 논문, 주요 활동이 분리되어 있으면 전문성이 충분히 전달되지 않습니다.',
   },
   {
-    title: '한 번 입력하면 기준 정보가 됩니다',
-    body: '지금 정리한 내용이 앞으로 선생님을 설명하는 기본 정보로 활용됩니다.',
+    title: 'AI가 설명할 근거 부족',
+    body: '정리된 공개 프로필이 없으면 AI가 선생님을 정확하게 소개하기 어렵습니다.',
   },
 ];
 
 const LANDING_PREP_ITEMS = [
-  '졸업 학교, 학위, 졸업 연도',
-  '수련 병원과 수련 과정',
-  '의사 면허번호와 전문의 정보',
-  '주요 근무 경력과 직책',
-  '병원명, 대표 전화번호, 주소, 진료시간',
+  '전문분야',
+  '학력·수련',
+  '자격·면허',
+  '학회·논문·활동',
+  '병원 정보',
 ];
 
 const LANDING_HARD_TO_READ_ITEMS = [
-  '이미지 안에 들어간 경력 소개',
-  '형식이 제각각인 소개문',
-  '연도나 기관이 빠진 이력',
-  '여러 곳에 흩어진 경력 정보',
+  '병원소개 한두 줄',
+  '학회·논문 정보 분산',
+  '수련·경력 누락',
+  '세부 전문분야 불명확',
+  'AI가 조합하기 어려운 정보',
 ];
 
 const LANDING_EASY_TO_READ_ITEMS = [
-  '학력',
-  '수련',
-  '자격 및 면허',
-  '경력',
-  '학회 활동',
-  '병원 정보',
+  'AI가 읽는 의사 프로필',
+  '학력·수련·자격 구조화',
+  '학회·논문·활동 정리',
+  '병원 정보 연결',
+  '무료 홈페이지 제작 기반 확보',
 ];
 
 const LANDING_NEXT_STEP_ITEMS = [
@@ -102,9 +102,47 @@ const LANDING_NEXT_STEP_ITEMS = [
 ];
 
 const LANDING_CLOSING_POINTS = [
-  '흩어진 이력이 하나의 CV로 정리됩니다',
-  '환자와 AI가 선생님의 전문성을 더 쉽게 이해합니다',
-  '필요할 때 다시 이어서 수정할 수 있습니다',
+  'AI가 읽는 의사 프로필',
+  '무료 홈페이지 제작 기반',
+  '초기 입력 의료진 우선 제작',
+];
+
+const LANDING_BENEFIT_CHIPS = [
+  '초기 입력 의료진 우선 제작',
+  '본인 확인 후 이어쓰기',
+  '제출 후 수정 가능',
+  '6월 말 AI 최적화 홈페이지 안내 예정',
+];
+
+const LANDING_HERO_PROFILE_ITEMS = [
+  '전문분야',
+  '학력·수련',
+  '자격·면허',
+  '학회·논문·활동',
+  '병원 정보',
+];
+
+const LANDING_HERO_HOMEPAGE_ITEMS = [
+  '선생님 소개 문구',
+  '진료 강점',
+  '경력 타임라인',
+  '병원 위치·진료시간',
+  '검색 가능한 공개 프로필',
+];
+
+const LANDING_PROCESS_CARDS = [
+  {
+    title: '1. 본인 확인',
+    body: '이름, 휴대폰 번호, 면허번호로 기존 작성 내역을 불러오거나 새 프로필을 시작합니다.',
+  },
+  {
+    title: '2. 전문 이력 입력',
+    body: '학력, 학회, 자격, 수련, 경력, 기타 활동, 병원 정보를 순서대로 입력합니다.',
+  },
+  {
+    title: '3. 프로필·홈페이지 기반 생성',
+    body: '입력한 정보는 AI가 읽기 쉬운 의사 프로필과 무료 홈페이지 제작 기반으로 활용됩니다.',
+  },
 ];
 
 const SECTION_META = {
@@ -470,57 +508,70 @@ function renderLandingScreen() {
       <section class="hero-panel dark landing-hero-panel">
         <div class="landing-hero-grid">
           <div class="landing-copy-stack">
-            <div class="eyebrow dark">FOR DOCTORS</div>
-            <h1 class="landing-hero-title">환자와 AI가 선생님의 전문성을 정확히 이해하도록, 선생님의 정보를 입력해주세요.</h1>
+            <div class="eyebrow dark">AI 검색 시대, 의사 프로필 선점</div>
+            <h1 class="landing-hero-title">앞으로 환자는 병원이 아니라 의사를 AI로 찾습니다</h1>
             <div class="landing-hero-body">
-              <p>AI는 이미지보다 텍스트를, 구조화된 정보를 더 잘 읽어냅니다.</p>
-              <p>AI 시대, 선생님의 정보를 구조화시켜 정리하세요. 닥스밋이 도와드릴게요.</p>
-              <p>정보가 모두 입력되면 차후 홈페이지를 무료로 제공예정입니다</p>
+              <p>좋은 경력이 있어도 흩어져 있으면 AI는 선생님을 정확히 설명하기 어렵습니다.</p>
+              <p>학력, 수련, 전문분야, 학회, 경력, 병원 정보를 직접 입력하면 AI가 읽는 의사 프로필로 정리하고, 추후 무료 AI 최적화 홈페이지 제작의 기반으로 활용합니다.</p>
             </div>
             <div class="landing-hero-actions">
-              <button class="btn btn-primary" type="button" onclick="startIntakeFromLanding()">내 CV 정리 시작하기</button>
+              <button class="btn btn-primary" type="button" onclick="startIntakeFromLanding()">무료 홈페이지 받을 프로필 만들기</button>
+              <button
+                class="btn btn-secondary landing-secondary-cta"
+                type="button"
+                onclick="document.getElementById('landing-before-after')?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' })"
+              >
+                입력 후 어떻게 보이는지 보기
+              </button>
             </div>
-            <div class="micro-copy landing-helper-copy">먼저 본인 확인 후 바로 작성하실 수 있습니다.</div>
+            <div class="micro-copy landing-helper-copy">직접 입력 · 저장 후 이어쓰기 가능 · 제출 후 수정 가능</div>
           </div>
 
           <aside class="card landing-structured-card" aria-label="예시 구조화 프로필">
             <div class="landing-structured-head">
               <div>
-                <div class="eyebrow">sample profile</div>
-                <div class="landing-structured-title">입력하면 이렇게 정리됩니다</div>
+                <div class="eyebrow">landing preview</div>
+                <div class="landing-structured-title">입력 후 만들어지는 것</div>
               </div>
-              <div class="landing-structured-badge">예시</div>
+              <div class="landing-structured-badge">정리 예시</div>
             </div>
-            <div class="landing-structured-list">
-              ${renderStructuredProfileRow('학력', '서울대 의과대학 · 의학과 · 학사')}
-              ${renderStructuredProfileRow('수련', '상급종합병원 · 내과 전공의 수료')}
-              ${renderStructuredProfileRow('자격 및 면허', '의사면허 · 내과 전문의')}
-              ${renderStructuredProfileRow('경력', '내과 진료원장 · 대표원장')}
-              ${renderStructuredProfileRow('진료 분야', '만성질환 · 예방의학 · 생활습관 상담')}
-              ${renderStructuredProfileRow('병원 정보', '서울 강남구 · 평일/토요일 진료시간 입력')}
+            <div class="landing-structured-group-grid">
+              <section class="landing-structured-group">
+                <div class="landing-structured-group-title">AI가 읽는 의사 프로필</div>
+                <ul class="landing-structured-list">
+                  ${LANDING_HERO_PROFILE_ITEMS.map(function (item) {
+                    return `<li>${escapeHtml(item)}</li>`;
+                  }).join('')}
+                </ul>
+              </section>
+              <section class="landing-structured-group">
+                <div class="landing-structured-group-title">무료 홈페이지 제작 기반</div>
+                <ul class="landing-structured-list">
+                  ${LANDING_HERO_HOMEPAGE_ITEMS.map(function (item) {
+                    return `<li>${escapeHtml(item)}</li>`;
+                  }).join('')}
+                </ul>
+              </section>
             </div>
+            <div class="landing-structured-footer">입력한 정보가 곧 선생님 홈페이지의 원고가 됩니다</div>
           </aside>
         </div>
       </section>
 
-      <section class="landing-section stack-20">
-        <div class="card section-card landing-prep-card">
-          <div class="landing-prep-head">
-            <h2 class="landing-card-title">시작 전에 준비해주세요</h2>
-            <p class="landing-card-body">아래 정보 중 일부라도 먼저 입력하시면 됩니다.</p>
-          </div>
-          <ul class="landing-list closing">
-            ${LANDING_PREP_ITEMS.map(function (item) {
-              return `<li>${escapeHtml(item)}</li>`;
-            }).join('')}
-          </ul>
+      <section class="landing-section landing-benefit-section">
+        <div class="landing-benefit-bar" aria-label="랜딩 혜택 요약">
+          ${LANDING_BENEFIT_CHIPS.map(function (item) {
+            return `<div class="landing-benefit-chip">${escapeHtml(item)}</div>`;
+          }).join('')}
         </div>
       </section>
 
       <section class="landing-section stack-20">
         <div class="section-mini-head">
           <div>
-            <h1>왜 지금 입력해야 할까요</h1>
+            <h1>좋은 경력이 있어도, AI가 읽을 수 없으면 없는 정보처럼 보일 수 있습니다</h1>
+            <p>지금 선생님의 정보는 병원 소개, 학회 활동, 논문, 포털 프로필, 병원 홈페이지에 흩어져 있습니다.</p>
+            <p>사람은 여러 정보를 조합해 이해할 수 있지만, AI는 한 명의 의사 프로필로 정리된 정보를 더 쉽게 이해합니다.</p>
           </div>
         </div>
         <div class="landing-reason-grid">
@@ -538,12 +589,31 @@ function renderLandingScreen() {
       <section class="landing-section stack-20">
         <div class="section-mini-head">
           <div>
-            <h1>같은 정보도 정리 방식에 따라 다르게 읽힙니다</h1>
+            <h1>직접 입력하면, 흩어진 이력이 하나의 의사 프로필이 됩니다</h1>
+            <p>직접 입력합니다. 준비된 항목부터 작성하고, 나중에 이어서 채울 수 있습니다.</p>
+          </div>
+        </div>
+        <div class="landing-process-grid">
+          ${LANDING_PROCESS_CARDS.map(function (card) {
+            return `
+              <article class="card landing-info-card landing-process-card">
+                <h2 class="landing-card-title">${escapeHtml(card.title)}</h2>
+                <p class="landing-card-body">${escapeHtml(card.body)}</p>
+              </article>
+            `;
+          }).join('')}
+        </div>
+      </section>
+
+      <section class="landing-section stack-20" id="landing-before-after">
+        <div class="section-mini-head">
+          <div>
+            <h1>같은 경력도 정리 방식에 따라 다르게 읽힙니다</h1>
           </div>
         </div>
         <div class="landing-compare-grid">
           <article class="soft-card section-card landing-compare-card">
-            <h2 class="landing-card-title">읽기 어려운 정보</h2>
+            <h2 class="landing-card-title">입력 전</h2>
             <ul class="landing-list muted">
               ${LANDING_HARD_TO_READ_ITEMS.map(function (item) {
                 return `<li>${escapeHtml(item)}</li>`;
@@ -551,7 +621,7 @@ function renderLandingScreen() {
             </ul>
           </article>
           <article class="card section-card landing-compare-card">
-            <h2 class="landing-card-title">읽기 쉬운 정보</h2>
+            <h2 class="landing-card-title">입력 후</h2>
             <ul class="landing-list positive">
               ${LANDING_EASY_TO_READ_ITEMS.map(function (item) {
                 return `<li>${escapeHtml(item)}</li>`;
@@ -559,14 +629,40 @@ function renderLandingScreen() {
             </ul>
           </article>
         </div>
-        <div class="landing-footer-copy">같은 내용도 구조화되어 있으면 환자와 AI가 더 빠르고 정확하게 이해합니다.</div>
+        <div class="landing-footer-copy landing-compare-emphasis">좋은 경력이 ‘있는 것’과 좋은 경력이 ‘읽히는 것’은 다릅니다.</div>
       </section>
 
       <section class="landing-section stack-20">
         <div class="section-mini-head">
           <div>
-            <h1>입력은 이 순서로 진행됩니다</h1>
-            <p>준비된 항목부터 차례대로 작성해 주세요. 기존 작성 내역이 있다면 이어서 입력할 수 있습니다.</p>
+            <h1>CV 입력이 아니라, 선생님 홈페이지의 초안을 만드는 과정입니다</h1>
+            <p>지금 입력한 학력, 수련, 경력, 학회 활동, 병원 정보는 추후 무료 AI 최적화 홈페이지 제작의 기본 원고로 활용됩니다.</p>
+            <p>먼저 입력한 선생님부터 홈페이지 제작 대상에 우선 반영됩니다.</p>
+          </div>
+        </div>
+        <div class="card section-card landing-homepage-panel">
+          <div class="landing-homepage-copy">
+            <div>
+              <h2 class="landing-card-title">초기 입력 의료진 우선 혜택</h2>
+              <p class="landing-card-body">프로필을 먼저 완성한 선생님부터 AI 최적화 무료 홈페이지 제작 안내를 받을 수 있습니다.</p>
+            </div>
+            <div class="landing-homepage-actions">
+              <ul class="landing-list closing">
+                ${LANDING_CLOSING_POINTS.map(function (item) {
+                  return `<li>${escapeHtml(item)}</li>`;
+                }).join('')}
+              </ul>
+              <button class="btn btn-primary" type="button" onclick="startIntakeFromLanding()">무료 홈페이지 받을 프로필 만들기</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="landing-section stack-20">
+        <div class="section-mini-head">
+          <div>
+            <h1>입력은 정해진 순서대로, 작성은 가능한 만큼만</h1>
+            <p>한 번에 모든 항목을 완성하지 않아도 됩니다. 준비된 정보부터 입력하고, 같은 본인 확인 정보로 다시 들어와 이어서 작성할 수 있습니다.</p>
           </div>
         </div>
         <div class="landing-step-grid">
@@ -582,36 +678,16 @@ function renderLandingScreen() {
       </section>
 
       <section class="landing-section stack-20 landing-closing-section">
-        <div class="section-mini-head">
-          <div>
-            <h1>지금 정리해두면 이렇게 달라집니다</h1>
-          </div>
-        </div>
-        <div class="card section-card landing-points-card">
-          <ul class="landing-list closing">
-            ${LANDING_CLOSING_POINTS.map(function (item) {
-              return `<li>${escapeHtml(item)}</li>`;
-            }).join('')}
-          </ul>
-        </div>
         <div class="hero-panel dark landing-final-panel">
           <div class="landing-final-copy">
-            <h2 class="landing-final-title">이제 AI가 더 잘 이해하는 CV로 미리 바꿔두세요</h2>
-            <p class="landing-final-body">먼저 본인 확인 후 바로 작성하실 수 있습니다.</p>
-            <button class="btn btn-primary" type="button" onclick="startIntakeFromLanding()">내 CV 시작하기</button>
+            <h2 class="landing-final-title">선생님의 경력을 AI가 읽을 수 있는 상태로 바꿔두세요</h2>
+            <p class="landing-final-body">흩어진 이력은 AI가 대신 정리해주지 않습니다. 지금 입력한 정보가 선생님의 의사 프로필이 되고, 무료 홈페이지 제작의 시작점이 됩니다.</p>
+            <button class="btn btn-primary" type="button" onclick="startIntakeFromLanding()">무료 홈페이지 받을 프로필 만들기</button>
+            <div class="micro-copy landing-helper-copy">초기 입력 의료진 우선 제작 · 제출 후 수정 가능</div>
           </div>
         </div>
       </section>
     </main>
-  `;
-}
-
-function renderStructuredProfileRow(label, value) {
-  return `
-    <div class="landing-structured-row">
-      <div class="landing-structured-label">${escapeHtml(label)}</div>
-      <div class="landing-structured-value">${escapeHtml(value)}</div>
-    </div>
   `;
 }
 
