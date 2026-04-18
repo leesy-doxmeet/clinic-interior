@@ -133,6 +133,91 @@ a {
   padding-bottom: 88px;
 }
 
+.landing-loading-screen {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+}
+
+.landing-loading-card {
+  width: 100%;
+  max-width: 640px;
+  display: grid;
+  justify-items: center;
+  gap: 20px;
+  padding: 34px 28px;
+  border-radius: 32px;
+  background:
+    radial-gradient(circle at top left, rgba(166, 200, 255, 0.72) 0%, rgba(166, 200, 255, 0) 42%),
+    linear-gradient(180deg, #f7fbff 0%, #eef5ff 56%, #ffffff 100%);
+  border: 1px solid rgba(0, 85, 184, 0.1);
+  box-shadow: 0 18px 48px rgba(0, 43, 118, 0.09);
+  text-align: center;
+}
+
+.landing-loading-brand {
+  justify-content: center;
+}
+
+.landing-loading-spinner {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 3px solid rgba(0, 85, 184, 0.12);
+  border-top-color: #0055b8;
+  animation: landingSpin 0.95s linear infinite;
+}
+
+.landing-loading-title {
+  margin: 0;
+  font-size: 32px;
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+  font-weight: 600;
+  color: #002b76;
+}
+
+.landing-loading-body {
+  max-width: 420px;
+  font-size: 16px;
+  line-height: 1.5;
+  letter-spacing: -0.02em;
+  color: rgba(0, 43, 118, 0.76);
+}
+
+.landing-brand-lockup {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.landing-brand-logo {
+  width: 132px;
+  height: auto;
+  display: block;
+}
+
+.landing-brand-copy {
+  display: grid;
+  gap: 3px;
+}
+
+.landing-brand-kicker {
+  font-size: 11px;
+  line-height: 1.2;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+  color: rgba(0, 85, 184, 0.72);
+}
+
+.landing-brand-name {
+  font-size: 17px;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  font-weight: 600;
+  color: #002b76;
+}
+
 .landing-section {
   display: grid;
   gap: 28px;
@@ -141,8 +226,11 @@ a {
 .landing-hero-panel {
   padding: 42px 40px;
   background:
-    radial-gradient(circle at top right, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0) 34%),
-    linear-gradient(155deg, #0a67d2 0%, #0055b8 54%, #08408c 100%);
+    radial-gradient(circle at top left, rgba(166, 200, 255, 0.9) 0%, rgba(166, 200, 255, 0) 38%),
+    radial-gradient(circle at top right, rgba(0, 85, 184, 0.14) 0%, rgba(0, 85, 184, 0) 36%),
+    linear-gradient(180deg, #f7fbff 0%, #eef5ff 52%, #ffffff 100%);
+  border: 1px solid rgba(0, 85, 184, 0.08);
+  box-shadow: 0 18px 48px rgba(0, 43, 118, 0.08);
 }
 
 .landing-hero-grid {
@@ -166,13 +254,14 @@ a {
   letter-spacing: -0.028em;
   font-weight: 600;
   text-wrap: balance;
+  color: #002b76;
 }
 
 .landing-hero-body {
   display: grid;
   gap: 12px;
   max-width: 620px;
-  color: rgba(255, 255, 255, 0.86);
+  color: rgba(0, 43, 118, 0.8);
   font-size: 17px;
   line-height: 1.47;
   letter-spacing: -0.022em;
@@ -191,18 +280,18 @@ a {
 }
 
 .landing-secondary-cta {
-  border-color: rgba(255, 255, 255, 0.24);
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
+  border-color: rgba(0, 85, 184, 0.18);
+  background: rgba(166, 200, 255, 0.22);
+  color: #0055b8;
 }
 
 .landing-secondary-cta:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.18);
-  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(166, 200, 255, 0.3);
+  border-color: rgba(0, 85, 184, 0.28);
 }
 
 .landing-helper-copy {
-  color: rgba(255, 255, 255, 0.82);
+  color: rgba(0, 43, 118, 0.7);
   font-size: 14px;
   line-height: 1.43;
   letter-spacing: -0.014em;
@@ -320,13 +409,13 @@ a {
   padding: 16px 14px;
   text-align: center;
   border-radius: 22px;
-  background: #fff;
-  border: 1px solid rgba(29, 29, 31, 0.06);
-  box-shadow: var(--shadow-soft);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(238, 245, 255, 0.98) 100%);
+  border: 1px solid rgba(0, 85, 184, 0.08);
+  box-shadow: 0 12px 30px rgba(0, 43, 118, 0.06);
   font-size: 15px;
   line-height: 1.4;
   letter-spacing: -0.02em;
-  color: var(--text-primary);
+  color: #002b76;
   font-weight: 600;
 }
 
@@ -464,6 +553,10 @@ a {
 
 .landing-homepage-panel {
   padding: 28px 26px;
+  background:
+    radial-gradient(circle at top left, rgba(166, 200, 255, 0.5) 0%, rgba(166, 200, 255, 0) 44%),
+    linear-gradient(180deg, #ffffff 0%, #f5f9ff 100%);
+  border: 1px solid rgba(0, 85, 184, 0.08);
 }
 
 .landing-homepage-copy {
@@ -482,8 +575,11 @@ a {
 .landing-final-panel {
   padding: 36px 32px;
   background:
-    radial-gradient(circle at top right, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0) 36%),
-    linear-gradient(155deg, #0a67d2 0%, #0055b8 54%, #08408c 100%);
+    radial-gradient(circle at top left, rgba(166, 200, 255, 0.9) 0%, rgba(166, 200, 255, 0) 42%),
+    radial-gradient(circle at bottom right, rgba(0, 85, 184, 0.16) 0%, rgba(0, 85, 184, 0) 42%),
+    linear-gradient(180deg, #f8fbff 0%, #eef5ff 55%, #ffffff 100%);
+  border: 1px solid rgba(0, 85, 184, 0.08);
+  box-shadow: 0 18px 44px rgba(0, 43, 118, 0.08);
 }
 
 .landing-final-copy {
@@ -499,13 +595,13 @@ a {
   line-height: 1.1;
   letter-spacing: -0.03em;
   font-weight: 600;
-  color: #fff;
+  color: #002b76;
 }
 
 .landing-final-body {
   margin: 0;
   max-width: 520px;
-  color: rgba(255, 255, 255, 0.74);
+  color: rgba(0, 43, 118, 0.76);
   font-size: 17px;
   line-height: 1.47;
   letter-spacing: -0.022em;
@@ -534,6 +630,12 @@ a {
   font-size: 17px;
   line-height: 1.47;
   letter-spacing: -0.022em;
+}
+
+@keyframes landingSpin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .card {
@@ -1517,6 +1619,10 @@ a {
     padding: 32px 24px;
   }
 
+  .landing-brand-logo {
+    width: 120px;
+  }
+
   .landing-hero-title {
     max-width: none;
     font-size: 40px;
@@ -1663,6 +1769,18 @@ a {
     text-wrap: pretty;
   }
 
+  .landing-brand-lockup {
+    gap: 10px;
+  }
+
+  .landing-brand-logo {
+    width: 108px;
+  }
+
+  .landing-brand-name {
+    font-size: 15px;
+  }
+
   .landing-hero-body {
     font-size: 16px;
     gap: 10px;
@@ -1719,6 +1837,15 @@ a {
   .landing-final-copy .btn,
   .landing-homepage-actions .btn {
     width: 100%;
+  }
+
+  .landing-loading-card {
+    padding: 28px 22px;
+    border-radius: 26px;
+  }
+
+  .landing-loading-title {
+    font-size: 28px;
   }
 
   .section-mini-head h1 {
