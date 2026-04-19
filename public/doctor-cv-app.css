@@ -279,17 +279,6 @@ a {
   margin-top: 2px;
 }
 
-.landing-secondary-cta {
-  border-color: rgba(0, 85, 184, 0.18);
-  background: rgba(166, 200, 255, 0.22);
-  color: #0055b8;
-}
-
-.landing-secondary-cta:hover:not(:disabled) {
-  background: rgba(166, 200, 255, 0.3);
-  border-color: rgba(0, 85, 184, 0.28);
-}
-
 .landing-helper-copy {
   color: rgba(0, 43, 118, 0.7);
   font-size: 14px;
