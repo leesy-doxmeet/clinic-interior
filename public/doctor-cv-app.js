@@ -530,13 +530,6 @@ function renderLandingScreen() {
             </div>
             <div class="landing-hero-actions">
               <button class="btn btn-primary" type="button" onclick="startIntakeFromLanding()">무료 홈페이지 받을 프로필 만들기</button>
-              <button
-                class="btn btn-secondary landing-secondary-cta"
-                type="button"
-                onclick="document.getElementById('landing-before-after')?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' })"
-              >
-                입력 후 어떻게 보이는지 보기
-              </button>
             </div>
             <div class="micro-copy landing-helper-copy">직접 입력 · 저장 후 이어쓰기 가능 · 제출 후 수정 가능</div>
           </div>
