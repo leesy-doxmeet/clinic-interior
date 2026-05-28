@@ -219,6 +219,7 @@ const state = {
   draft: createDraftSkeleton(),
   identityForm: createEmptyIdentity(),
   currentStepKey: 'landing',
+  homepagePreviewMode: 'desktop',
   localOnly: false,
   identityBusy: false,
   submitBusy: false,
@@ -499,6 +500,16 @@ function renderActiveScreen() {
 
   if (!state.draft.draftId || state.currentStepKey === 'identity') {
     return renderIdentityScreen();
+  }
+
+  if (state.currentStepKey === 'homepage') {
+    return `
+      <main class="page-shell homepage-preview-shell fade-up">
+        ${state.notice ? renderNoticeBanner() : ''}
+        ${renderGeneratedHomepageScreen()}
+        ${state.confirmDialog.open ? renderConfirmDialog() : ''}
+      </main>
+    `;
   }
 
   let content = '';
@@ -1075,6 +1086,16 @@ function renderSummaryStep() {
         ${renderSummaryRow('other', ensureArray(state.draft.other).length + '건')}
         ${renderSummaryRow('clinic', isClinicInfoComplete(state.draft.clinicInfo) ? '입력 완료' : '추가 확인 필요')}
       </div>
+
+      ${state.draft.status === 'submitted' ? `
+        <div class="summary-homepage-cta">
+          <div>
+            <strong>제출된 정보로 홈페이지가 생성되었습니다</strong>
+            <span>최종 제출 이후 화면을 다시 확인할 수 있습니다.</span>
+          </div>
+          <button class="btn btn-primary" type="button" onclick="openHomepagePreview()">홈페이지 미리보기</button>
+        </div>
+      ` : ''}
     </section>
   `;
 }
@@ -1104,6 +1125,280 @@ function renderSummaryRow(sectionKey, text) {
       <button class="action-button primary" type="button" onclick="goToStep('${sectionKey}')">수정</button>
     </div>
   `;
+}
+
+function renderGeneratedHomepageScreen() {
+  const previewMode = state.homepagePreviewMode === 'mobile' ? 'mobile' : 'desktop';
+  const info = normalizeClinicInfoClient(state.draft.clinicInfo || {});
+  const hasClinicInfo = !!(info.clinicName || info.address || info.phone || info.openingHours);
+
+  return `
+    <section class="homepage-preview-screen">
+      <div class="homepage-preview-toolbar">
+        <div>
+          <div class="eyebrow">website preview</div>
+          <h1 class="homepage-preview-title">제출 정보가 적용된 홈페이지</h1>
+          <p class="homepage-preview-body">최종 제출된 의료진, 병원, 방문 정보를 바탕으로 환자용 홈페이지를 바로 구성했습니다.</p>
+        </div>
+        <div class="homepage-preview-actions">
+          <div class="preview-toggle-group" role="group" aria-label="미리보기 크기">
+            <button class="preview-toggle-button ${previewMode === 'desktop' ? 'active' : ''}" type="button" onclick="setHomepagePreviewMode('desktop')">데스크탑</button>
+            <button class="preview-toggle-button ${previewMode === 'mobile' ? 'active' : ''}" type="button" onclick="setHomepagePreviewMode('mobile')">모바일</button>
+          </div>
+          <button class="btn btn-secondary" type="button" onclick="leaveHomepagePreview('summary')">최종 확인</button>
+          <button class="btn btn-primary" type="button" onclick="leaveHomepagePreview('clinic')">${hasClinicInfo ? '병원 정보 수정' : '병원 정보 입력'}</button>
+        </div>
+      </div>
+
+      <div class="homepage-preview-frame ${previewMode}">
+        ${renderGeneratedHomepageContent(state.draft)}
+      </div>
+    </section>
+  `;
+}
+
+function renderGeneratedHomepageContent(draft) {
+  const info = normalizeClinicInfoClient((draft && draft.clinicInfo) || {});
+  const identity = (draft && draft.identity) || {};
+  const doctorName = identity.name ? `${identity.name} 원장` : '의료진';
+  const hospitalName = info.clinicName || '병원명을 입력해 주세요';
+  const phoneHref = info.phone ? `tel:${normalizePhone(info.phone)}` : '#clinic-location';
+  const specialtyLine = getHomepageSpecialtyLine(draft);
+  const heroSubtitle = specialtyLine || '의료진 이력과 병원 정보를 환자가 이해하기 쉽게 정리한 소개 페이지';
+  const introText = getHomepageIntroText(draft, doctorName, specialtyLine);
+
+  return `
+    <article class="generated-site">
+      <section class="generated-site-hero">
+        <div class="generated-site-inner generated-site-hero-inner">
+          <div class="generated-site-eyebrow">DOXMEET PREVIEW</div>
+          <h1>${escapeHtml(hospitalName)}</h1>
+          <p>${escapeHtml(heroSubtitle)}</p>
+          <div class="generated-site-ctas">
+            <a class="generated-site-button primary" href="${escapeAttr(phoneHref)}">${info.phone ? '전화 상담' : '상담 안내'}</a>
+            <a class="generated-site-button secondary" href="#clinic-location">오시는 길</a>
+          </div>
+          ${renderHomepageMetaChips(info)}
+        </div>
+      </section>
+
+      <section class="generated-site-section light">
+        <div class="generated-site-inner generated-site-profile">
+          <div class="generated-site-avatar" aria-hidden="true">
+            <svg width="92" height="92" fill="none" stroke="currentColor" stroke-width="1.4" viewBox="0 0 24 24">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </div>
+          <div>
+            <div class="generated-site-eyebrow dark">DOCTOR PROFILE</div>
+            <h2>${escapeHtml(doctorName)}</h2>
+            ${specialtyLine ? `<div class="generated-site-subtitle">${escapeHtml(specialtyLine)}</div>` : ''}
+            <p>${escapeHtml(introText)}</p>
+            <div class="generated-site-profile-links">
+              <a href="#clinic-credentials">학력 및 수련</a>
+              ${info.phone ? `<a href="${escapeAttr(phoneHref)}">${escapeHtml(info.phone)}</a>` : ''}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="clinic-credentials" class="generated-site-section white">
+        <div class="generated-site-inner">
+          <div class="generated-site-section-head">
+            <div class="generated-site-eyebrow dark">CREDENTIALS</div>
+            <h2>학력, 자격, 수련 이력</h2>
+            <p>입력한 항목을 홈페이지에서 읽기 쉬운 공개 프로필 구조로 정리했습니다.</p>
+          </div>
+          <div class="generated-site-card-grid">
+            ${renderHomepageCredentialCard('학력', draft.education, 'education', '등록된 학력 정보가 없습니다.')}
+            ${renderHomepageCredentialCard('수련', draft.training, 'training', '등록된 수련 정보가 없습니다.')}
+            ${renderHomepageCredentialCard('자격 및 면허', draft.qualification, 'qualification', '등록된 자격 정보가 없습니다.')}
+            ${renderHomepageCredentialCard('학회 활동', draft.society, 'society', '등록된 학회 활동 정보가 없습니다.')}
+          </div>
+        </div>
+      </section>
+
+      <section class="generated-site-section dark">
+        <div class="generated-site-inner">
+          <div class="generated-site-section-head">
+            <div class="generated-site-eyebrow">CAREER</div>
+            <h2>주요 경력</h2>
+            <p>환자가 신뢰할 수 있도록 경력 흐름을 간결하게 보여줍니다.</p>
+          </div>
+          <div class="generated-site-dark-card">
+            ${renderHomepageCredentialItems(draft.career, 'career', '등록된 경력 정보가 없습니다.')}
+          </div>
+        </div>
+      </section>
+
+      <section class="generated-site-section light">
+        <div class="generated-site-inner">
+          <div class="generated-site-section-head">
+            <div class="generated-site-eyebrow dark">ACTIVITY</div>
+            <h2>기타 활동</h2>
+            <p>논문, 강연, 수상 등 환자에게 공개할 수 있는 활동 정보를 함께 노출합니다.</p>
+          </div>
+          <div class="generated-site-single-card">
+            ${renderHomepageCredentialItems(draft.other, 'other', '등록된 기타 활동 정보가 없습니다.')}
+          </div>
+        </div>
+      </section>
+
+      <section id="clinic-location" class="generated-site-section white">
+        <div class="generated-site-inner">
+          <div class="generated-site-section-head">
+            <div class="generated-site-eyebrow dark">VISIT</div>
+            <h2>방문 정보</h2>
+          </div>
+          <div class="generated-site-location-grid">
+            <div class="generated-site-map-panel">
+              <div>
+                <svg width="46" height="46" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M17.657 16.657 13.414 20.9a1.998 1.998 0 0 1-2.827 0l-4.244-4.243a8 8 0 1 1 11.314 0z"></path>
+                  <path d="M15 11a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"></path>
+                </svg>
+                <strong>${escapeHtml(info.address || '주소 입력 전')}</strong>
+                <span>실제 홈페이지 제작 시 지도 연동 영역으로 사용됩니다.</span>
+              </div>
+            </div>
+            <div class="generated-site-info-panel">
+              ${renderHomepageInfoRow('주소', info.fullAddress || info.address, '병원 주소를 입력해 주세요.')}
+              ${renderHomepageInfoRow('전화', info.phone, '전화번호를 입력해 주세요.')}
+              ${renderHomepageInfoRow('진료시간', info.openingHours, '진료시간을 입력해 주세요.')}
+              ${renderHomepageInfoRow('휴진', info.closedDays, '휴진 정보를 입력해 주세요.')}
+              ${renderHomepageInfoRow('주차', info.parking, '주차 정보를 입력해 주세요.')}
+              ${renderHomepageScheduleRows(info)}
+            </div>
+          </div>
+        </div>
+      </section>
+    </article>
+  `;
+}
+
+function renderHomepageMetaChips(info) {
+  const chips = [
+    info.address ? `주소 ${info.address}` : '',
+    info.openingHours ? `진료시간 ${info.openingHours}` : '',
+    info.closedDays ? `휴진 ${info.closedDays}` : '',
+    info.parking ? `주차 ${info.parking}` : '',
+  ].filter(Boolean);
+
+  if (!chips.length) {
+    return '';
+  }
+
+  return `
+    <div class="generated-site-meta">
+      ${chips.map(function (chip) {
+        return `<span>${escapeHtml(chip)}</span>`;
+      }).join('')}
+    </div>
+  `;
+}
+
+function renderHomepageCredentialCard(label, items, sectionKey, emptyText) {
+  return `
+    <div class="generated-site-card">
+      <h3>${escapeHtml(label)}</h3>
+      ${renderHomepageCredentialItems(items, sectionKey, emptyText)}
+    </div>
+  `;
+}
+
+function renderHomepageCredentialItems(items, sectionKey, emptyText) {
+  const meaningfulItems = ensureArray(items).filter(Boolean);
+
+  if (!meaningfulItems.length) {
+    return `<div class="generated-site-empty">${escapeHtml(emptyText)}</div>`;
+  }
+
+  return meaningfulItems.map(function (item) {
+    const title = getItemTitle(sectionKey, item);
+    const subtitle = getItemSubtitle(sectionKey, item);
+    const period = getItemPeriod(sectionKey, item);
+    const notes = getItemNotes(sectionKey, item);
+    return `
+      <div class="generated-site-credential-item">
+        <div>
+          <strong>${escapeHtml(title)}</strong>
+          ${subtitle ? `<span>${escapeHtml(subtitle)}</span>` : ''}
+          ${notes ? `<em>${escapeHtml(notes)}</em>` : ''}
+        </div>
+        ${period ? `<small>${escapeHtml(period)}</small>` : ''}
+      </div>
+    `;
+  }).join('');
+}
+
+function renderHomepageInfoRow(label, value, emptyText) {
+  return `
+    <div class="generated-site-info-row">
+      <span>${escapeHtml(label)}</span>
+      <strong>${escapeHtml(value || emptyText)}</strong>
+    </div>
+  `;
+}
+
+function renderHomepageScheduleRows(info) {
+  const schedules = ensureArray(info.schedules).filter(function (item) {
+    return !!(item.days || item.openTime || item.closeTime || item.note);
+  });
+
+  if (!schedules.length) {
+    return '';
+  }
+
+  return `
+    <div class="generated-site-schedule-list">
+      ${schedules.map(function (item) {
+        const time = item.openTime && item.closeTime
+          ? `${item.openTime}-${item.closeTime}`
+          : item.openTime || item.closeTime || '';
+        const detail = [time, item.note].filter(Boolean).join(' · ');
+        return `
+          <div class="generated-site-info-row compact">
+            <span>${escapeHtml(item.days || '진료')}</span>
+            <strong>${escapeHtml(detail || '시간 정보 입력 전')}</strong>
+          </div>
+        `;
+      }).join('')}
+    </div>
+  `;
+}
+
+function getHomepageSpecialtyLine(draft) {
+  const specialtyList = ensureArray(draft && draft.qualification)
+    .map(function (item) {
+      return item && item.isSpecialist === '예' ? getQualificationSpecialty(item) : '';
+    })
+    .filter(Boolean);
+  const uniqueSpecialties = Array.from(new Set(specialtyList));
+  if (uniqueSpecialties.length) {
+    return `${uniqueSpecialties.join(' · ')} 전문`;
+  }
+
+  const departmentList = ensureArray(draft && draft.training)
+    .concat(ensureArray(draft && draft.career))
+    .map(function (item) {
+      return item && item.department ? item.department : '';
+    })
+    .filter(Boolean);
+  const uniqueDepartments = Array.from(new Set(departmentList));
+  return uniqueDepartments.length ? `${uniqueDepartments.slice(0, 3).join(' · ')} 중심 진료` : '';
+}
+
+function getHomepageIntroText(draft, doctorName, specialtyLine) {
+  const counts = [
+    ensureArray(draft && draft.education).length ? '학력' : '',
+    ensureArray(draft && draft.training).length ? '수련' : '',
+    ensureArray(draft && draft.qualification).length ? '자격' : '',
+    ensureArray(draft && draft.career).length ? '경력' : '',
+  ].filter(Boolean);
+  const basis = counts.length ? counts.join(', ') : '입력된 프로필';
+  const specialtyCopy = specialtyLine ? `${specialtyLine}을 바탕으로 ` : '';
+  return `${basis} 정보를 바탕으로 ${doctorName}의 ${specialtyCopy}진료 경험과 신뢰 요소를 환자가 이해하기 쉽게 정리했습니다.`;
 }
 
 function renderComparisonRing(percent, tone, caption) {
@@ -2790,6 +3085,11 @@ function goBack() {
     return;
   }
 
+  if (state.currentStepKey === 'homepage') {
+    leaveHomepagePreview('summary');
+    return;
+  }
+
   const previousStepKey = getPreviousStepKey(state.currentStepKey);
   if (!previousStepKey) {
     return;
@@ -2802,7 +3102,39 @@ function goToStep(targetStepKey) {
   if (state.submitBusy || targetStepKey === state.currentStepKey) {
     return;
   }
+  if (state.currentStepKey === 'homepage') {
+    leaveHomepagePreview(targetStepKey);
+    return;
+  }
   navigateToStep(targetStepKey);
+}
+
+function setHomepagePreviewMode(mode) {
+  state.homepagePreviewMode = mode === 'mobile' ? 'mobile' : 'desktop';
+  renderApp();
+}
+
+function openHomepagePreview() {
+  if (state.submitBusy) {
+    return;
+  }
+  state.currentStepKey = 'homepage';
+  state.notice = null;
+  renderApp();
+  scrollViewportTop(true);
+}
+
+function leaveHomepagePreview(targetStepKey) {
+  if (state.submitBusy) {
+    return;
+  }
+  const safeTarget = FLOW_STEPS.some(function (step) {
+    return step.key === targetStepKey;
+  }) ? targetStepKey : 'summary';
+  state.currentStepKey = safeTarget;
+  state.notice = null;
+  renderApp();
+  scrollViewportTop(true);
 }
 
 function navigateToStep(targetStepKey) {
@@ -2955,12 +3287,13 @@ async function submitCurrentDraft() {
     });
 
     hydrateDraft(response.draft);
-    state.currentStepKey = 'summary';
+    state.currentStepKey = 'homepage';
+    state.homepagePreviewMode = isMobileViewport() ? 'mobile' : 'desktop';
     state.localOnly = false;
     state.notice = {
       type: 'success',
       code: 'submit-success',
-      message: '제출이 완료되었습니다. 6월 말 AI 최적화 홈페이지가 나올 때, 한번 더 확인하세요!',
+      message: '제출이 완료되었습니다. 입력한 정보가 적용된 홈페이지 미리보기를 만들었습니다.',
     };
     cacheCurrentDraft('submitted');
   } catch (error) {
@@ -2974,6 +3307,9 @@ async function submitCurrentDraft() {
   } finally {
     state.submitBusy = false;
     renderApp();
+    if (state.currentStepKey === 'homepage') {
+      scrollViewportTop(true);
+    }
   }
 }
 
@@ -3501,6 +3837,9 @@ window.handleIdentitySubmit = handleIdentitySubmit;
 window.goNext = goNext;
 window.goBack = goBack;
 window.goToStep = goToStep;
+window.setHomepagePreviewMode = setHomepagePreviewMode;
+window.openHomepagePreview = openHomepagePreview;
+window.leaveHomepagePreview = leaveHomepagePreview;
 window.openEditor = openEditor;
 window.closeEditor = closeEditor;
 window.saveEditorItem = saveEditorItem;
