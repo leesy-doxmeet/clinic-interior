@@ -220,6 +220,9 @@ const state = {
   identityForm: createEmptyIdentity(),
   currentStepKey: 'landing',
   homepagePreviewMode: 'desktop',
+  homepageShareCopyStatus: 'idle',
+  publicHomepageMode: false,
+  publicHomepageError: '',
   localOnly: false,
   identityBusy: false,
   submitBusy: false,
@@ -269,11 +272,18 @@ async function initApp() {
     state.identityForm = loadLastIdentity();
     state.viewport.width = window.innerWidth;
     state.viewport.lastScrollY = window.scrollY || 0;
+    const sharedHomepageState = loadSharedHomepageFromUrl();
 
     if (!window.__DOCTOR_CV_EVENT_HANDLERS_BOUND__) {
       window.addEventListener('scroll', handleWindowScroll, { passive: true });
       window.addEventListener('resize', handleViewportResize);
       window.__DOCTOR_CV_EVENT_HANDLERS_BOUND__ = true;
+    }
+
+    if (sharedHomepageState.loaded || sharedHomepageState.error) {
+      state.loading = false;
+      renderApp();
+      return;
     }
 
     renderApp();
@@ -494,12 +504,12 @@ function renderConfigError() {
 }
 
 function renderActiveScreen() {
-  if (state.currentStepKey === 'landing') {
-    return renderLandingScreen();
+  if (state.publicHomepageError) {
+    return renderSharedHomepageError();
   }
 
-  if (!state.draft.draftId || state.currentStepKey === 'identity') {
-    return renderIdentityScreen();
+  if (state.currentStepKey === 'landing') {
+    return renderLandingScreen();
   }
 
   if (state.currentStepKey === 'homepage') {
@@ -510,6 +520,10 @@ function renderActiveScreen() {
         ${state.confirmDialog.open ? renderConfirmDialog() : ''}
       </main>
     `;
+  }
+
+  if (!state.draft.draftId || state.currentStepKey === 'identity') {
+    return renderIdentityScreen();
   }
 
   let content = '';
@@ -1131,22 +1145,28 @@ function renderGeneratedHomepageScreen() {
   const previewMode = state.homepagePreviewMode === 'mobile' ? 'mobile' : 'desktop';
   const info = normalizeClinicInfoClient(state.draft.clinicInfo || {});
   const hasClinicInfo = !!(info.clinicName || info.address || info.phone || info.openingHours);
+  const isPublicView = !!state.publicHomepageMode;
 
   return `
     <section class="homepage-preview-screen">
       <div class="homepage-preview-toolbar">
-        <div>
+        <div class="homepage-preview-copy">
           <div class="eyebrow">website preview</div>
           <h1 class="homepage-preview-title">제출 정보가 적용된 홈페이지</h1>
           <p class="homepage-preview-body">최종 제출된 의료진, 병원, 방문 정보를 바탕으로 환자용 홈페이지를 바로 구성했습니다.</p>
+          ${renderHomepageShareUrlBox(state.draft)}
         </div>
         <div class="homepage-preview-actions">
           <div class="preview-toggle-group" role="group" aria-label="미리보기 크기">
             <button class="preview-toggle-button ${previewMode === 'desktop' ? 'active' : ''}" type="button" onclick="setHomepagePreviewMode('desktop')">데스크탑</button>
             <button class="preview-toggle-button ${previewMode === 'mobile' ? 'active' : ''}" type="button" onclick="setHomepagePreviewMode('mobile')">모바일</button>
           </div>
-          <button class="btn btn-secondary" type="button" onclick="leaveHomepagePreview('summary')">최종 확인</button>
-          <button class="btn btn-primary" type="button" onclick="leaveHomepagePreview('clinic')">${hasClinicInfo ? '병원 정보 수정' : '병원 정보 입력'}</button>
+          ${isPublicView
+            ? `<button class="btn btn-primary" type="button" onclick="startFreshFromSharedHomepage()">내 프로필 만들기</button>`
+            : `
+              <button class="btn btn-secondary" type="button" onclick="leaveHomepagePreview('summary')">최종 확인</button>
+              <button class="btn btn-primary" type="button" onclick="leaveHomepagePreview('clinic')">${hasClinicInfo ? '병원 정보 수정' : '병원 정보 입력'}</button>
+            `}
         </div>
       </div>
 
@@ -1157,12 +1177,57 @@ function renderGeneratedHomepageScreen() {
   `;
 }
 
+function renderHomepageShareUrlBox(draft) {
+  const shareUrl = getHomepageShareUrl(draft);
+  const copyLabel =
+    state.homepageShareCopyStatus === 'copied'
+      ? '복사됨'
+      : state.homepageShareCopyStatus === 'failed'
+        ? '복사 실패'
+        : 'URL 복사';
+  const helperText = state.publicHomepageMode
+    ? '이 URL을 저장하면 같은 홈페이지를 다시 열 수 있습니다.'
+    : '이 URL을 복사해 전달하면 입력 정보가 적용된 홈페이지를 바로 볼 수 있습니다.';
+  return `
+    <div class="homepage-share-box">
+      <label class="homepage-share-label" for="homepageShareUrl">개인 홈페이지 URL</label>
+      <div class="homepage-share-row">
+        <input id="homepageShareUrl" class="homepage-share-input" type="text" value="${escapeAttr(shareUrl)}" readonly onclick="this.select()">
+        <button class="btn btn-primary homepage-copy-button" type="button" onclick="copyHomepageShareUrl()">${escapeHtml(copyLabel)}</button>
+      </div>
+      <div class="homepage-share-hint">${escapeHtml(helperText)}</div>
+    </div>
+  `;
+}
+
+function renderSharedHomepageError() {
+  return `
+    <main class="page-shell identity fade-up">
+      <section class="hero-panel dark">
+        <div class="eyebrow dark">homepage link</div>
+        <h1 class="hero-title">홈페이지 URL을 열 수 없습니다</h1>
+        <div class="hero-body">${escapeHtml(state.publicHomepageError || 'URL 정보가 올바르지 않습니다.')}</div>
+      </section>
+      <section class="card section-card stack-16" style="margin-top:18px;">
+        <div>
+          <div class="card-title">다시 진행하기</div>
+          <div class="card-body">링크가 잘렸거나 오래된 형식일 수 있습니다. 제출 완료 화면에서 URL을 다시 복사해 주세요.</div>
+        </div>
+        <button class="btn btn-primary" type="button" onclick="startFreshFromSharedHomepage()">프로필 입력 화면으로 이동</button>
+      </section>
+    </main>
+  `;
+}
+
 function renderGeneratedHomepageContent(draft) {
   const info = normalizeClinicInfoClient((draft && draft.clinicInfo) || {});
   const identity = (draft && draft.identity) || {};
   const doctorName = identity.name ? `${identity.name} 원장` : '의료진';
   const hospitalName = info.clinicName || '병원명을 입력해 주세요';
   const phoneHref = info.phone ? `tel:${normalizePhone(info.phone)}` : '#clinic-location';
+  const primaryCtaAttrs = info.phone
+    ? `href="${escapeAttr(phoneHref)}"`
+    : `href="#clinic-location" onclick="scrollHomepageSection('clinic-location'); return false;"`;
   const specialtyLine = getHomepageSpecialtyLine(draft);
   const heroSubtitle = specialtyLine || '의료진 이력과 병원 정보를 환자가 이해하기 쉽게 정리한 소개 페이지';
   const introText = getHomepageIntroText(draft, doctorName, specialtyLine);
@@ -1175,8 +1240,8 @@ function renderGeneratedHomepageContent(draft) {
           <h1>${escapeHtml(hospitalName)}</h1>
           <p>${escapeHtml(heroSubtitle)}</p>
           <div class="generated-site-ctas">
-            <a class="generated-site-button primary" href="${escapeAttr(phoneHref)}">${info.phone ? '전화 상담' : '상담 안내'}</a>
-            <a class="generated-site-button secondary" href="#clinic-location">오시는 길</a>
+            <a class="generated-site-button primary" ${primaryCtaAttrs}>${info.phone ? '전화 상담' : '상담 안내'}</a>
+            <a class="generated-site-button secondary" href="#clinic-location" onclick="scrollHomepageSection('clinic-location'); return false;">오시는 길</a>
           </div>
           ${renderHomepageMetaChips(info)}
         </div>
@@ -1196,7 +1261,7 @@ function renderGeneratedHomepageContent(draft) {
             ${specialtyLine ? `<div class="generated-site-subtitle">${escapeHtml(specialtyLine)}</div>` : ''}
             <p>${escapeHtml(introText)}</p>
             <div class="generated-site-profile-links">
-              <a href="#clinic-credentials">학력 및 수련</a>
+              <a href="#clinic-credentials" onclick="scrollHomepageSection('clinic-credentials'); return false;">학력 및 수련</a>
               ${info.phone ? `<a href="${escapeAttr(phoneHref)}">${escapeHtml(info.phone)}</a>` : ''}
             </div>
           </div>
@@ -1399,6 +1464,173 @@ function getHomepageIntroText(draft, doctorName, specialtyLine) {
   const basis = counts.length ? counts.join(', ') : '입력된 프로필';
   const specialtyCopy = specialtyLine ? `${specialtyLine}을 바탕으로 ` : '';
   return `${basis} 정보를 바탕으로 ${doctorName}의 ${specialtyCopy}진료 경험과 신뢰 요소를 환자가 이해하기 쉽게 정리했습니다.`;
+}
+
+function getHomepageShareUrl(draft) {
+  const snapshot = buildHomepageShareSnapshot(draft);
+  const token = encodeHomepageShareSnapshot(snapshot);
+  return `${getHomepageBaseUrl()}#profile=${token}`;
+}
+
+function getHomepageBaseUrl() {
+  if (typeof window === 'undefined' || !window.location) {
+    return '';
+  }
+  return `${window.location.origin}${window.location.pathname}`;
+}
+
+function buildHomepageShareSnapshot(draft) {
+  const safeDraft = draft || createDraftSkeleton();
+  return {
+    v: 1,
+    n: ((safeDraft.identity || {}).name || '').trim(),
+    s: 'submitted',
+    at: safeDraft.submittedAt || safeDraft.updatedAt || '',
+    e: ensureArray(safeDraft.education).map(clone),
+    so: ensureArray(safeDraft.society).map(clone),
+    q: ensureArray(safeDraft.qualification).map(clone),
+    t: ensureArray(safeDraft.training).map(clone),
+    c: ensureArray(safeDraft.career).map(clone),
+    o: ensureArray(safeDraft.other).map(clone),
+    ci: clone(normalizeClinicInfoClient(safeDraft.clinicInfo || {})),
+  };
+}
+
+function draftFromHomepageShareSnapshot(snapshot) {
+  if (!snapshot || Number(snapshot.v || 0) !== 1) {
+    throw new Error('지원하지 않는 홈페이지 URL 형식입니다.');
+  }
+
+  return Object.assign(createDraftSkeleton(), {
+    draftId: '',
+    doctorKey: '',
+    identity: Object.assign(createEmptyIdentity(), {
+      name: snapshot.n || '',
+    }),
+    status: snapshot.s || 'submitted',
+    lastCompletedStep: 'summary',
+    submittedAt: snapshot.at || '',
+    updatedAt: snapshot.at || '',
+    education: ensureArray(snapshot.e),
+    society: ensureArray(snapshot.so),
+    qualification: ensureArray(snapshot.q),
+    training: ensureArray(snapshot.t),
+    career: ensureArray(snapshot.c),
+    other: ensureArray(snapshot.o),
+    clinicInfo: snapshot.ci || createEmptyClinicInfo(),
+    meta: {
+      resumeStepKey: 'homepage',
+      source: 'homepage_share_url',
+    },
+  });
+}
+
+function encodeHomepageShareSnapshot(snapshot) {
+  const json = JSON.stringify(snapshot);
+  const bytes = new TextEncoder().encode(json);
+  let binary = '';
+  const chunkSize = 0x8000;
+  for (let index = 0; index < bytes.length; index += chunkSize) {
+    binary += String.fromCharCode.apply(null, bytes.slice(index, index + chunkSize));
+  }
+  return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
+}
+
+function decodeHomepageShareSnapshot(token) {
+  const normalized = String(token || '').replace(/-/g, '+').replace(/_/g, '/');
+  const padded = normalized + '='.repeat((4 - (normalized.length % 4)) % 4);
+  const binary = atob(padded);
+  const bytes = new Uint8Array(binary.length);
+  for (let index = 0; index < binary.length; index += 1) {
+    bytes[index] = binary.charCodeAt(index);
+  }
+  return JSON.parse(new TextDecoder().decode(bytes));
+}
+
+function getHomepageShareTokenFromUrl() {
+  if (typeof window === 'undefined' || !window.location || !window.location.hash) {
+    return '';
+  }
+  const hash = window.location.hash.replace(/^#/, '');
+  if (!hash) {
+    return '';
+  }
+  const params = new URLSearchParams(hash);
+  return params.get('profile') || '';
+}
+
+function loadSharedHomepageFromUrl() {
+  const token = getHomepageShareTokenFromUrl();
+  if (!token) {
+    return { loaded: false, error: false };
+  }
+
+  try {
+    const snapshot = decodeHomepageShareSnapshot(token);
+    hydrateDraft(draftFromHomepageShareSnapshot(snapshot));
+    state.currentStepKey = 'homepage';
+    state.homepagePreviewMode = isMobileViewport() ? 'mobile' : 'desktop';
+    state.publicHomepageMode = true;
+    state.publicHomepageError = '';
+    state.notice = null;
+    return { loaded: true, error: false };
+  } catch (error) {
+    state.publicHomepageMode = true;
+    state.publicHomepageError =
+      error && error.message ? error.message : 'URL 정보가 올바르지 않습니다.';
+    return { loaded: false, error: true };
+  }
+}
+
+async function copyHomepageShareUrl() {
+  const shareUrl = getHomepageShareUrl(state.draft);
+  let copied = false;
+
+  try {
+    if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+      await navigator.clipboard.writeText(shareUrl);
+      copied = true;
+    }
+  } catch (error) {
+    copied = false;
+  }
+
+  if (!copied) {
+    copied = copyTextWithTemporaryInput(shareUrl);
+  }
+
+  state.homepageShareCopyStatus = copied ? 'copied' : 'failed';
+  renderApp();
+  window.setTimeout(function () {
+    if (state.homepageShareCopyStatus !== 'idle') {
+      state.homepageShareCopyStatus = 'idle';
+      renderApp();
+    }
+  }, 1800);
+}
+
+function copyTextWithTemporaryInput(text) {
+  try {
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    textarea.setAttribute('readonly', '');
+    textarea.style.position = 'fixed';
+    textarea.style.top = '-1000px';
+    document.body.appendChild(textarea);
+    textarea.select();
+    const copied = document.execCommand('copy');
+    document.body.removeChild(textarea);
+    return copied;
+  } catch (error) {
+    return false;
+  }
+}
+
+function scrollHomepageSection(sectionId) {
+  const target = document.getElementById(sectionId);
+  if (target && typeof target.scrollIntoView === 'function') {
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
 }
 
 function renderComparisonRing(percent, tone, caption) {
@@ -3124,6 +3356,20 @@ function openHomepagePreview() {
   scrollViewportTop(true);
 }
 
+function startFreshFromSharedHomepage() {
+  state.publicHomepageMode = false;
+  state.publicHomepageError = '';
+  state.homepageShareCopyStatus = 'idle';
+  state.currentStepKey = 'landing';
+  state.draft = createDraftSkeleton();
+  state.identityForm = loadLastIdentity();
+  if (typeof window !== 'undefined' && window.history && window.location) {
+    window.history.replaceState(null, '', getHomepageBaseUrl());
+  }
+  renderApp();
+  scrollViewportTop(true);
+}
+
 function leaveHomepagePreview(targetStepKey) {
   if (state.submitBusy) {
     return;
@@ -3839,6 +4085,9 @@ window.goBack = goBack;
 window.goToStep = goToStep;
 window.setHomepagePreviewMode = setHomepagePreviewMode;
 window.openHomepagePreview = openHomepagePreview;
+window.copyHomepageShareUrl = copyHomepageShareUrl;
+window.startFreshFromSharedHomepage = startFreshFromSharedHomepage;
+window.scrollHomepageSection = scrollHomepageSection;
 window.leaveHomepagePreview = leaveHomepagePreview;
 window.openEditor = openEditor;
 window.closeEditor = closeEditor;

@@ -1402,6 +1402,66 @@ a {
   flex-wrap: wrap;
 }
 
+.homepage-preview-copy {
+  min-width: 0;
+  flex: 1 1 560px;
+}
+
+.homepage-share-box {
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+  max-width: 760px;
+  padding: 12px;
+  border-radius: 18px;
+  background: #f5f5f7;
+  border: 1px solid rgba(29, 29, 31, 0.08);
+}
+
+.homepage-share-label {
+  color: var(--text-primary);
+  font-size: 12px;
+  line-height: 1.35;
+  font-weight: 600;
+}
+
+.homepage-share-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+}
+
+.homepage-share-input {
+  width: 100%;
+  min-height: 42px;
+  border: 1px solid rgba(29, 29, 31, 0.1);
+  border-radius: 14px;
+  background: #ffffff;
+  color: var(--text-secondary);
+  padding: 10px 12px;
+  font-size: 13px;
+  line-height: 1.35;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.homepage-share-input:focus {
+  outline: none;
+  border-color: var(--blue);
+  box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.1);
+}
+
+.homepage-copy-button {
+  min-height: 42px;
+  white-space: nowrap;
+}
+
+.homepage-share-hint {
+  color: var(--text-tertiary);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
 .preview-toggle-group {
   display: inline-flex;
   gap: 4px;
@@ -1873,6 +1933,14 @@ a {
 
   .homepage-preview-actions .btn,
   .preview-toggle-group {
+    width: 100%;
+  }
+
+  .homepage-share-row {
+    grid-template-columns: 1fr;
+  }
+
+  .homepage-copy-button {
     width: 100%;
   }
 
