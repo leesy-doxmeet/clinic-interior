@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import Script from "next/script"
 
 import { DoctorCvAppShell } from "@/components/doctor-cv-app-shell"
+import { SiteFooter } from "@/components/site-footer"
 
 export const metadata: Metadata = {
   title: "의사 CV 입력 | DOXTALK",
@@ -25,6 +26,7 @@ export default function HomePage() {
         data-doctor-cv-api-base={doctorCvApiBase}
       />
       <DoctorCvAppShell />
+      <SiteFooter />
     </>
   )
 }

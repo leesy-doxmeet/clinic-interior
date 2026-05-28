@@ -47,7 +47,7 @@ export function SiteFooter() {
 
             <span className="text-border">|</span>
 
-            <Link href="/interior/sitemap-page" className="transition-colors hover:text-foreground">
+            <Link href="/sitemap-page" className="transition-colors hover:text-foreground">
               사이트맵
             </Link>
           </nav>
@@ -63,19 +63,34 @@ export function SiteFooter() {
             <p className="text-sm font-semibold text-foreground">닥스밋 인테리어</p>
             <ul className="mt-3 space-y-2 text-sm">
               <li>
-                <Link href="/interior" className="transition-colors hover:text-foreground">
+                <a
+                  href="https://doxtalk.co.kr"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="transition-colors hover:text-foreground"
+                >
                   인테리어 업체 모음
-                </Link>
+                </a>
               </li>
               <li>
-                <Link href="/interior/register" className="transition-colors hover:text-foreground">
+                <a
+                  href="https://doxtalk.co.kr/register"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="transition-colors hover:text-foreground"
+                >
                   업체 등록하기
-                </Link>
+                </a>
               </li>
               <li>
-                <Link href="/interior/quote" className="transition-colors hover:text-foreground">
+                <a
+                  href="https://doxtalk.co.kr/quote"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="transition-colors hover:text-foreground"
+                >
                   무료 개원 상담 신청
-                </Link>
+                </a>
               </li>
             </ul>
           </div>
@@ -132,7 +147,7 @@ export function SiteFooter() {
                 </a>
               </li>
               <li>
-                <Link href="/interior/sitemap-page" className="transition-colors hover:text-foreground">
+                <Link href="/sitemap-page" className="transition-colors hover:text-foreground">
                   사이트맵
                 </Link>
               </li>
