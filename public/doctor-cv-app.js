@@ -362,10 +362,25 @@ function createDraftSkeleton() {
   };
 }
 
+function getDoctorCvApiBase() {
+  if (window.DOCTOR_CV_API_BASE) {
+    return window.DOCTOR_CV_API_BASE;
+  }
+
+  const script = document.querySelector('script[data-doctor-cv-api-base]');
+  const apiBase = script ? script.getAttribute('data-doctor-cv-api-base') : '';
+  if (apiBase) {
+    window.DOCTOR_CV_API_BASE = apiBase;
+    return apiBase;
+  }
+
+  return '/api/doctor-cv';
+}
+
 function callServer(functionName, payload) {
   const endpointKey = SERVER_ENDPOINTS[functionName];
   const actionKey = SERVER_ACTIONS[functionName];
-  const apiBase = window.DOCTOR_CV_API_BASE || '/api/doctor-cv';
+  const apiBase = getDoctorCvApiBase();
   const isDirectApi = /^https?:\/\//i.test(apiBase);
   if (!endpointKey || !actionKey) {
     return Promise.reject(new Error('지원되지 않는 서버 요청입니다: ' + functionName));

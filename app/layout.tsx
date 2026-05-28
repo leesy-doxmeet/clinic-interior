@@ -11,11 +11,14 @@ const notoSansKr = Noto_Sans_KR({
 })
 
 export const metadata: Metadata = {
-  title: "병원인테리어 업체모음",
+  title: {
+    default: "DOXTALK",
+    template: "%s",
+  },
   icons: {
     icon: "/favicon.ico"
   },
-  description: "의사가 만나는 의사 닥스밋 - 병원 인테리어 업체를 한눈에 비교하세요",
+  description: "의사가 만나는 의사 닥스밋 서비스입니다.",
 }
 
 export const viewport: Viewport = {
