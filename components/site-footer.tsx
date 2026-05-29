@@ -164,7 +164,7 @@ export function SiteFooter() {
             <span className="font-medium text-foreground">닥스밋(DOXMEET)</span>
             {" | 대표 : 홍진우 | 사업자등록번호 : 385-88-02455"}
           </p>
-          <p>{"주소 : 서울특별시 성동구 연무장 15길 11 에스팩토리 B동 스파크플러스 207호"}</p>
+          <p>{"주소 : 인천광역시 연수구 컨벤시아대로80, 401동 1004호(송도동, 인천송도힐스테이트)"}</p>
           <p>{"Tel : 070-7834-8371 | Email : leesy@doxmeet.com"}</p>
         </div>
 
