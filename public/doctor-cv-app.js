@@ -194,6 +194,7 @@ const SERVER_ENDPOINTS = {
   saveDraftStep: 'save',
   submitDraft: 'submit',
   getSummaryInsights: 'summary-insights',
+  getPublishedHomepageByLicense: 'homepage',
 };
 
 const SERVER_ACTIONS = {
@@ -202,6 +203,7 @@ const SERVER_ACTIONS = {
   saveDraftStep: 'saveDraftStep',
   submitDraft: 'submitDraft',
   getSummaryInsights: 'getSummaryInsights',
+  getPublishedHomepageByLicense: 'getPublishedHomepageByLicense',
 };
 
 const state = {
@@ -273,6 +275,7 @@ async function initApp() {
     state.viewport.width = window.innerWidth;
     state.viewport.lastScrollY = window.scrollY || 0;
     const sharedHomepageState = loadSharedHomepageFromUrl();
+    const publicHomepageLicenseNumber = getPublicHomepageLicenseNumberFromPath();
 
     if (!window.__DOCTOR_CV_EVENT_HANDLERS_BOUND__) {
       window.addEventListener('scroll', handleWindowScroll, { passive: true });
@@ -294,8 +297,19 @@ async function initApp() {
         state.appError =
           'Google Sheets 연결이 아직 설정되지 않았습니다. 배포 전에 Script Properties에 SPREADSHEET_ID를 입력해 주세요.';
       }
+      if (publicHomepageLicenseNumber && !state.appError) {
+        await loadPublishedHomepageByLicense(publicHomepageLicenseNumber);
+        state.loading = false;
+        renderApp();
+        return;
+      }
     } catch (error) {
-      state.appError = error.message || '초기 설정을 불러오지 못했습니다.';
+      if (publicHomepageLicenseNumber) {
+        state.publicHomepageMode = true;
+        state.publicHomepageError = error.message || '홈페이지 정보를 불러오지 못했습니다.';
+      } else {
+        state.appError = error.message || '초기 설정을 불러오지 못했습니다.';
+      }
     } finally {
       state.loading = false;
       renderApp();
@@ -1467,9 +1481,26 @@ function getHomepageIntroText(draft, doctorName, specialtyLine) {
 }
 
 function getHomepageShareUrl(draft) {
+  const licenseSlug = getHomepageLicenseSlug(draft);
+  if (licenseSlug) {
+    return `${getHomepageRootUrl()}/${encodeURIComponent(licenseSlug)}`;
+  }
+
   const snapshot = buildHomepageShareSnapshot(draft);
   const token = encodeHomepageShareSnapshot(snapshot);
   return `${getHomepageBaseUrl()}#profile=${token}`;
+}
+
+function getHomepageLicenseSlug(draft) {
+  const identity = (draft && draft.identity) || {};
+  return normalizePublicLicenseNumber(identity.licenseNumber);
+}
+
+function getHomepageRootUrl() {
+  if (typeof window === 'undefined' || !window.location) {
+    return '';
+  }
+  return window.location.origin;
 }
 
 function getHomepageBaseUrl() {
@@ -1557,6 +1588,50 @@ function getHomepageShareTokenFromUrl() {
   }
   const params = new URLSearchParams(hash);
   return params.get('profile') || '';
+}
+
+function getPublicHomepageLicenseNumberFromPath() {
+  if (typeof window === 'undefined' || !window.location) {
+    return '';
+  }
+
+  const pathname = window.location.pathname || '';
+  const segments = pathname.split('/').filter(Boolean);
+  if (segments.length !== 1) {
+    return '';
+  }
+
+  return normalizePublicLicenseNumber(decodeURIComponent(segments[0]));
+}
+
+function normalizePublicLicenseNumber(value) {
+  return String(value || '').replace(/[^0-9]/g, '');
+}
+
+async function loadPublishedHomepageByLicense(licenseNumber) {
+  const normalizedLicenseNumber = normalizePublicLicenseNumber(licenseNumber);
+  if (!normalizedLicenseNumber) {
+    throw new Error('홈페이지 URL의 면허번호가 올바르지 않습니다.');
+  }
+
+  state.publicHomepageMode = true;
+  state.publicHomepageError = '';
+  state.notice = null;
+
+  const response = await callServer('getPublishedHomepageByLicense', {
+    licenseNumber: normalizedLicenseNumber,
+  });
+
+  if (!response || !response.draft) {
+    throw new Error('해당 면허번호로 공개된 홈페이지를 찾을 수 없습니다.');
+  }
+
+  hydrateDraft(response.draft);
+  state.currentStepKey = 'homepage';
+  state.homepagePreviewMode = isMobileViewport() ? 'mobile' : 'desktop';
+  state.publicHomepageMode = true;
+  state.publicHomepageError = '';
+  state.notice = null;
 }
 
 function loadSharedHomepageFromUrl() {
@@ -3364,7 +3439,7 @@ function startFreshFromSharedHomepage() {
   state.draft = createDraftSkeleton();
   state.identityForm = loadLastIdentity();
   if (typeof window !== 'undefined' && window.history && window.location) {
-    window.history.replaceState(null, '', getHomepageBaseUrl());
+    window.history.replaceState(null, '', getHomepageRootUrl());
   }
   renderApp();
   scrollViewportTop(true);
