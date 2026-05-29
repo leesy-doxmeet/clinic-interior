@@ -1166,8 +1166,8 @@ function renderGeneratedHomepageScreen() {
       <div class="homepage-preview-toolbar">
         <div class="homepage-preview-copy">
           <div class="eyebrow">website preview</div>
-          <h1 class="homepage-preview-title">제출 정보가 적용된 홈페이지</h1>
-          <p class="homepage-preview-body">최종 제출된 의료진, 병원, 방문 정보를 바탕으로 환자용 홈페이지를 바로 구성했습니다.</p>
+          <h1 class="homepage-preview-title">의원님의 홈페이지가 여기 있어요.</h1>
+          <p class="homepage-preview-body">네이버 맵, 카카오 맵에 등록하여 바로 사용하세요.</p>
           ${renderHomepageShareUrlBox(state.draft)}
         </div>
         <div class="homepage-preview-actions">
