@@ -87,7 +87,7 @@ const LANDING_EASY_TO_READ_ITEMS = [
   '학력·수련·자격 구조화',
   '학회·논문·활동 정리',
   '병원 정보 연결',
-  '무료 홈페이지 제작 기반 확보',
+  '홈페이지 제작 기반 확보',
 ];
 
 const LANDING_NEXT_STEP_ITEMS = [
@@ -103,7 +103,7 @@ const LANDING_NEXT_STEP_ITEMS = [
 
 const LANDING_CLOSING_POINTS = [
   'AI가 읽는 의사 프로필',
-  '무료 홈페이지 제작 기반',
+  '홈페이지 제작 기반',
   '초기 입력 의료진 우선 제작',
 ];
 
@@ -141,7 +141,7 @@ const LANDING_PROCESS_CARDS = [
   },
   {
     title: '3. 프로필·홈페이지 기반 생성',
-    body: '입력한 정보는 AI가 읽기 쉬운 의사 프로필과 무료 홈페이지 제작 기반으로 활용됩니다.',
+    body: '입력한 정보는 AI가 읽기 쉬운 의사 프로필과 홈페이지 제작 기반으로 활용됩니다.',
   },
 ];
 
@@ -280,6 +280,7 @@ async function initApp() {
     if (!window.__DOCTOR_CV_EVENT_HANDLERS_BOUND__) {
       window.addEventListener('scroll', handleWindowScroll, { passive: true });
       window.addEventListener('resize', handleViewportResize);
+      bindPaymentSuccessListeners();
       window.__DOCTOR_CV_EVENT_HANDLERS_BOUND__ = true;
     }
 
@@ -583,7 +584,7 @@ function renderLandingScreen() {
               <p>학력, 수련, 전문분야, 학회, 경력, 병원 정보를 직접 입력하면 AI가 읽는 의사 프로필로 정리하고, 추후 무료 AI 최적화 홈페이지 제작의 기반으로 활용합니다.</p>
             </div>
             <div class="landing-hero-actions">
-              <button class="btn btn-primary" type="button" onclick="startIntakeFromLanding()">무료 홈페이지 받을 프로필 만들기</button>
+              <button class="btn btn-primary" type="button" onclick="startIntakeFromLanding()">홈페이지 받을 프로필 만들기</button>
             </div>
             <div class="micro-copy landing-helper-copy">직접 입력 · 저장 후 이어쓰기 가능 · 제출 후 수정 가능</div>
           </div>
@@ -606,7 +607,7 @@ function renderLandingScreen() {
                 </ul>
               </section>
               <section class="landing-structured-group">
-                <div class="landing-structured-group-title">무료 홈페이지 제작 기반</div>
+                <div class="landing-structured-group-title">홈페이지 제작 기반</div>
                 <ul class="landing-structured-list">
                   ${LANDING_HERO_HOMEPAGE_ITEMS.map(function (item) {
                     return `<li>${escapeHtml(item)}</li>`;
@@ -705,7 +706,7 @@ function renderLandingScreen() {
           <div class="landing-homepage-copy">
             <div>
               <h2 class="landing-card-title">초기 입력 의료진 우선 혜택</h2>
-              <p class="landing-card-body">프로필을 먼저 완성한 선생님부터 AI 최적화 무료 홈페이지 제작 안내를 받을 수 있습니다.</p>
+              <p class="landing-card-body">프로필을 먼저 완성한 선생님부터 AI 최적화 홈페이지 제작 안내를 받을 수 있습니다.</p>
             </div>
             <div class="landing-homepage-actions">
               <ul class="landing-list closing">
@@ -713,7 +714,7 @@ function renderLandingScreen() {
                   return `<li>${escapeHtml(item)}</li>`;
                 }).join('')}
               </ul>
-              <button class="btn btn-primary" type="button" onclick="startIntakeFromLanding()">무료 홈페이지 받을 프로필 만들기</button>
+              <button class="btn btn-primary" type="button" onclick="startIntakeFromLanding()">홈페이지 받을 프로필 만들기</button>
             </div>
           </div>
         </div>
@@ -742,8 +743,8 @@ function renderLandingScreen() {
         <div class="hero-panel landing-final-panel">
           <div class="landing-final-copy">
             <h2 class="landing-final-title">선생님의 경력을 AI가 읽을 수 있는 상태로 바꿔두세요</h2>
-            <p class="landing-final-body">흩어진 이력은 AI가 대신 정리해주지 않습니다. 지금 입력한 정보가 선생님의 의사 프로필이 되고, 무료 홈페이지 제작의 시작점이 됩니다.</p>
-            <button class="btn btn-primary" type="button" onclick="startIntakeFromLanding()">무료 홈페이지 받을 프로필 만들기</button>
+            <p class="landing-final-body">흩어진 이력은 AI가 대신 정리해주지 않습니다. 지금 입력한 정보가 선생님의 의사 프로필이 되고, 홈페이지 제작의 시작점이 됩니다.</p>
+            <button class="btn btn-primary" type="button" onclick="startIntakeFromLanding()">홈페이지 받을 프로필 만들기</button>
             <div class="micro-copy landing-helper-copy">초기 입력 의료진 우선 제작 · 제출 후 수정 가능</div>
           </div>
         </div>
@@ -1746,7 +1747,7 @@ function renderBottomBar() {
       ? '제출 중…'
       : state.draft.status === 'submitted'
         ? '수정 내용 다시 제출'
-        : '제출 완료하기'
+        : '제출 완료하기 (월 10,000원)'
     : '다음 단계';
 
   return `
@@ -3369,13 +3370,98 @@ function openAddressLookup() {
   }).open();
 }
 
+const DOCTOR_CV_PAYMENT_CHANNEL = 'doctor-cv-payment';
+
+function bindPaymentSuccessListeners() {
+  if (window.__DOCTOR_CV_PAYMENT_LISTENERS_BOUND__) {
+    return;
+  }
+  window.__DOCTOR_CV_PAYMENT_LISTENERS_BOUND__ = true;
+  window.addEventListener('message', handlePaymentSuccessMessage);
+
+  if (typeof BroadcastChannel !== 'undefined') {
+    const channel = new BroadcastChannel(DOCTOR_CV_PAYMENT_CHANNEL);
+    channel.onmessage = function (event) {
+      if (event.data && event.data.type === 'doctor-cv-payment-success') {
+        triggerSubmitAfterPayment();
+      }
+    };
+    window.__DOCTOR_CV_PAYMENT_CHANNEL__ = channel;
+  }
+}
+
+function triggerSubmitAfterPayment() {
+  if (window.__DOCTOR_CV_PAYMENT_SUBMIT_TRIGGERED__) {
+    return;
+  }
+  if (state.currentStepKey === 'homepage') {
+    return;
+  }
+
+  window.__DOCTOR_CV_PAYMENT_SUBMIT_TRIGGERED__ = true;
+
+  if (state.currentStepKey !== 'summary') {
+    state.currentStepKey = 'summary';
+    renderApp();
+  }
+
+  state.notice = null;
+  submitCurrentDraft().finally(function () {
+    window.focus();
+  });
+}
+
+function handlePaymentSuccessMessage(event) {
+  if (!event || event.origin !== window.location.origin) {
+    return;
+  }
+  if (!event.data || event.data.type !== 'doctor-cv-payment-success') {
+    return;
+  }
+  triggerSubmitAfterPayment();
+}
+
+function openPaymentWindow() {
+  syncCurrentStepFromDom();
+  cacheCurrentDraft('before-payment');
+  window.__DOCTOR_CV_PAYMENT_SUBMIT_TRIGGERED__ = false;
+
+  const params = new URLSearchParams();
+  if (state.draft && state.draft.draftId) {
+    params.set('draftId', String(state.draft.draftId));
+  }
+  if (state.draft && state.draft.identity && state.draft.identity.licenseNumber) {
+    params.set('licenseNumber', String(state.draft.identity.licenseNumber));
+  }
+  if (state.draft && state.draft.identity && state.draft.identity.name) {
+    params.set('name', String(state.draft.identity.name));
+  }
+  if (state.draft && state.draft.identity && state.draft.identity.phone) {
+    params.set('phone', String(state.draft.identity.phone));
+  }
+
+  const query = params.toString();
+  const paymentUrl = query ? '/doctor-cv/payment?' + query : '/doctor-cv/payment';
+  window.__DOCTOR_CV_PAYMENT_WINDOW__ = window.open(
+    paymentUrl,
+    'doctorCvPayment',
+    'popup=yes,width=800,height=900'
+  );
+  state.notice = {
+    type: 'warning',
+    code: 'payment-pending',
+    message: '결제 창에서 등록을 완료하면 이 화면에서 CV 제출이 자동으로 진행됩니다.',
+  };
+  renderApp();
+}
+
 async function goNext() {
   if (state.submitBusy) {
     return;
   }
 
   if (state.currentStepKey === 'summary') {
-    await submitCurrentDraft();
+    openPaymentWindow();
     return;
   }
 
