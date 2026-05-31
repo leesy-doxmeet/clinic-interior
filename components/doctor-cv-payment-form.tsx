@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import {
   DOCTOR_CV_RECURRING_AMOUNT,
+  formatDoctorCvMonthlyPrice,
   TOSS_PAYMENTS_CLIENT_KEY,
 } from "@/lib/doctor-cv-billing"
 
@@ -107,12 +108,12 @@ export function DoctorCvPaymentForm() {
         <div className="rounded-lg border border-border bg-muted/40 px-4 py-3">
           <p className="text-sm text-muted-foreground">정기 결제 금액</p>
           <p className="mt-1 text-xl font-bold text-foreground">
-            월 {DOCTOR_CV_RECURRING_AMOUNT.toLocaleString("ko-KR")}원
+            {formatDoctorCvMonthlyPrice()}
           </p>
         </div>
 
         <div className="space-y-3 rounded-lg border border-border px-4 py-4">
-          <p className="text-sm font-medium text-foreground">정기 결제 약관 동의</p>
+          <p className="text-sm font-medium text-foreground">환불·정기결제 정책 동의</p>
 
           <label className="flex cursor-pointer items-start gap-3">
             <Checkbox
@@ -123,10 +124,21 @@ export function DoctorCvPaymentForm() {
               }}
               className="mt-0.5"
             />
-            <span className="text-sm leading-relaxed text-foreground">
-              <span className="font-medium text-primary">[필수]</span> 정기 결제 이용약관에
-              동의합니다. 등록한 카드로 매월 {DOCTOR_CV_RECURRING_AMOUNT.toLocaleString("ko-KR")}
-              원이 자동 결제됩니다.
+            <span className="flex flex-1 flex-wrap items-baseline gap-x-1 text-sm leading-relaxed text-foreground">
+              <span>
+                <span className="font-medium text-primary">[필수]</span> 환불·정기결제 정책에
+                동의합니다. 등록한 카드로 매월{" "}
+                {DOCTOR_CV_RECURRING_AMOUNT.toLocaleString("ko-KR")}원(부가세 포함)이 자동 결제됩니다.
+              </span>
+              <a
+                href="/about/refund"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(event) => event.stopPropagation()}
+                className="shrink-0 font-medium text-primary underline"
+              >
+                바로가기
+              </a>
             </span>
           </label>
 
@@ -139,9 +151,20 @@ export function DoctorCvPaymentForm() {
               }}
               className="mt-0.5"
             />
-            <span className="text-sm leading-relaxed text-foreground">
-              <span className="font-medium text-primary">[필수]</span> 결제 및 정기 결제 등록을
-              위한 개인정보 수집·이용에 동의합니다.
+            <span className="flex flex-1 flex-wrap items-baseline gap-x-1 text-sm leading-relaxed text-foreground">
+              <span>
+                <span className="font-medium text-primary">[필수]</span> 결제 및 정기 결제 등록을
+                위한 개인정보 수집·이용에 동의합니다.
+              </span>
+              <a
+                href="https://www.doxmeet.com/about/privacy"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(event) => event.stopPropagation()}
+                className="shrink-0 font-medium text-primary underline"
+              >
+                바로가기
+              </a>
             </span>
           </label>
         </div>

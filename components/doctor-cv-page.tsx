@@ -15,7 +15,7 @@ export function DoctorCvPage() {
         strategy="afterInteractive"
       />
       <Script
-        src="/doctor-cv-app.js?v=20260530-opener"
+        src="/doctor-cv-app.js?v=20260531-service-provision"
         strategy="afterInteractive"
         data-doctor-cv-api-base={doctorCvApiBase}
       />
