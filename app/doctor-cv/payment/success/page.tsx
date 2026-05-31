@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 
 import { DoctorCvPaymentCompleteActions } from "@/components/doctor-cv-payment-complete-actions"
 import { SiteFooter } from "@/components/site-footer"
-import { DOCTOR_CV_RECURRING_AMOUNT } from "@/lib/doctor-cv-billing"
+import { formatDoctorCvMonthlyPrice } from "@/lib/doctor-cv-billing"
 
 export const metadata: Metadata = {
   title: "정기 결제 성공 | DOXTALK",
@@ -29,7 +29,7 @@ export default function DoctorCvPaymentSuccessPage() {
 
           <h1 className="text-2xl font-bold text-card-foreground">정기 결제 성공</h1>
           <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-            월 {DOCTOR_CV_RECURRING_AMOUNT.toLocaleString("ko-KR")}원 정기 결제가 완료되었습니다.
+            {formatDoctorCvMonthlyPrice()} 정기 결제가 완료되었습니다.
           </p>
           <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
             CV 입력 화면으로 돌아가 계속 진행해 주세요.

@@ -5,8 +5,8 @@ import { DoctorCvPaymentForm } from "@/components/doctor-cv-payment-form"
 import { SiteFooter } from "@/components/site-footer"
 
 export const metadata: Metadata = {
-  title: "정기 결제 약관 동의 | DOXTALK",
-  description: "의사 CV 서비스 정기 결제 약관에 동의하고 카드를 등록합니다.",
+  title: "환불·정기결제 정책 동의 | DOXTALK",
+  description: "의사 CV 서비스 환불·정기결제 정책에 동의하고 카드를 등록합니다.",
 }
 
 export default function DoctorCvPaymentPage() {
@@ -14,9 +14,9 @@ export default function DoctorCvPaymentPage() {
     <div className="min-h-screen bg-background">
       <main className="mx-auto max-w-md px-4 py-6">
         <div className="rounded-xl border border-border bg-card p-6 sm:p-8">
-          <h1 className="text-2xl font-bold text-card-foreground">정기 결제 약관 동의</h1>
+          <h1 className="text-2xl font-bold text-card-foreground">환불·정기결제 정책 동의</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            정기 결제 등록을 위해 약관에 동의한 뒤 카드를 등록해주세요.
+            정기 결제 등록을 위해 환불·정기결제 정책에 동의한 뒤 카드를 등록해주세요.
           </p>
           <div className="mt-6">
             <Suspense fallback={<p className="text-sm text-muted-foreground">불러오는 중...</p>}>

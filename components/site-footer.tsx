@@ -47,6 +47,17 @@ export function SiteFooter() {
 
             <span className="text-border">|</span>
 
+            <Link
+              href="/about/refund"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition-colors hover:text-foreground"
+            >
+              환불·정기결제 정책
+            </Link>
+
+            <span className="text-border">|</span>
+
             <Link href="/sitemap-page" className="transition-colors hover:text-foreground">
               사이트맵
             </Link>
@@ -147,6 +158,16 @@ export function SiteFooter() {
                 </a>
               </li>
               <li>
+                <Link
+                  href="/about/refund"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="transition-colors hover:text-foreground"
+                >
+                  환불·정기결제 정책
+                </Link>
+              </li>
+              <li>
                 <Link href="/sitemap-page" className="transition-colors hover:text-foreground">
                   사이트맵
                 </Link>
@@ -165,7 +186,6 @@ export function SiteFooter() {
             {" | 대표 : 홍진우 | 사업자등록번호 : 385-88-02455"}
           </p>
           <p>{"주소 : 인천광역시 연수구 컨벤시아대로80, 401동 1004호(송도동, 인천송도힐스테이트)"}</p>
-          <p>{"통신판매업신고번호 : 제 2026-인천연수-0021호"}</p>
           <p>{"Tel : 070-7834-8371 | Email : leesy@doxmeet.com"}</p>
         </div>
 

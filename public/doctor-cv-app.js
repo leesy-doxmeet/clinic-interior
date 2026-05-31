@@ -107,7 +107,13 @@ const LANDING_CLOSING_POINTS = [
   '초기 입력 의료진 우선 제작',
 ];
 
+const RECURRING_PRICE_LABEL = '월 10,000원(부가세 포함)';
+
+const RECURRING_SERVICE_PROVISION_LABEL =
+  '결제 완료 후 CV 제출·의료진 홈페이지 제공 · 이용 기간: 해당 회차 결제일 ~ 다음 회차 정기결제 전';
+
 const LANDING_BENEFIT_CHIPS = [
+  RECURRING_PRICE_LABEL,
   '초기 입력 의료진 우선 제작',
   '본인 확인 후 이어쓰기',
   '제출 후 수정 가능',
@@ -586,7 +592,8 @@ function renderLandingScreen() {
             <div class="landing-hero-actions">
               <button class="btn btn-primary" type="button" onclick="startIntakeFromLanding()">홈페이지 받을 프로필 만들기</button>
             </div>
-            <div class="micro-copy landing-helper-copy">직접 입력 · 저장 후 이어쓰기 가능 · 제출 후 수정 가능</div>
+            <div class="micro-copy landing-helper-copy">${escapeHtml(RECURRING_PRICE_LABEL)} · 직접 입력 · 저장 후 이어쓰기 가능 · 제출 후 수정 가능</div>
+            <div class="micro-copy landing-helper-copy">${escapeHtml(RECURRING_SERVICE_PROVISION_LABEL)}</div>
           </div>
 
           <aside class="card landing-structured-card" aria-label="예시 구조화 프로필">
@@ -745,7 +752,8 @@ function renderLandingScreen() {
             <h2 class="landing-final-title">선생님의 경력을 AI가 읽을 수 있는 상태로 바꿔두세요</h2>
             <p class="landing-final-body">흩어진 이력은 AI가 대신 정리해주지 않습니다. 지금 입력한 정보가 선생님의 의사 프로필이 되고, 홈페이지 제작의 시작점이 됩니다.</p>
             <button class="btn btn-primary" type="button" onclick="startIntakeFromLanding()">홈페이지 받을 프로필 만들기</button>
-            <div class="micro-copy landing-helper-copy">초기 입력 의료진 우선 제작 · 제출 후 수정 가능</div>
+            <div class="micro-copy landing-helper-copy">${escapeHtml(RECURRING_PRICE_LABEL)} · 초기 입력 의료진 우선 제작 · 제출 후 수정 가능</div>
+            <div class="micro-copy landing-helper-copy">${escapeHtml(RECURRING_SERVICE_PROVISION_LABEL)}</div>
           </div>
         </div>
       </section>
@@ -1747,7 +1755,7 @@ function renderBottomBar() {
       ? '제출 중…'
       : state.draft.status === 'submitted'
         ? '수정 내용 다시 제출'
-        : '제출 완료하기 (월 10,000원)'
+        : `제출 완료하기 (${RECURRING_PRICE_LABEL})`
     : '다음 단계';
 
   return `
@@ -3461,7 +3469,11 @@ async function goNext() {
   }
 
   if (state.currentStepKey === 'summary') {
-    openPaymentWindow();
+    if (state.draft.status === 'submitted') {
+      await submitCurrentDraft();
+    } else {
+      openPaymentWindow();
+    }
     return;
   }
 
@@ -3684,6 +3696,7 @@ async function submitCurrentDraft() {
 
   syncCurrentStepFromDom();
   cacheCurrentDraft('before-submit');
+  const isResubmit = state.draft.status === 'submitted';
   state.submitBusy = true;
   renderApp();
 
@@ -3700,7 +3713,9 @@ async function submitCurrentDraft() {
     state.notice = {
       type: 'success',
       code: 'submit-success',
-      message: '제출이 완료되었습니다. 입력한 정보가 적용된 홈페이지 미리보기를 만들었습니다.',
+      message: isResubmit
+        ? '수정 내용이 다시 제출되었습니다. 홈페이지 미리보기에서 변경 사항을 확인해 주세요.'
+        : '제출이 완료되었습니다. 입력한 정보가 적용된 홈페이지 미리보기를 만들었습니다.',
     };
     cacheCurrentDraft('submitted');
   } catch (error) {
