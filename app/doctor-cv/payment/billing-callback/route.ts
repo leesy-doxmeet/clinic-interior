@@ -1,12 +1,14 @@
 import { NextResponse } from "next/server"
 
+export const runtime = "edge"
+
 function getTossPaymentsAuthorizationHeader() {
   const secretKey = process.env.TOSS_PAYMENTS_SECRET_KEY
   if (!secretKey) {
     return ""
   }
 
-  return `Basic ${Buffer.from(`${secretKey}:`).toString("base64")}`
+  return `Basic ${btoa(`${secretKey}:`)}`
 }
 
 export async function GET(request: Request) {

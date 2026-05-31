@@ -9,6 +9,8 @@ const DOCTOR_CV_GAS_WEBAPP_URL =
   process.env.DOCTOR_CV_GAS_WEBAPP_URL ??
   "https://script.google.com/macros/s/AKfycbwH7GaSiju9geEcNr2kjLo6_ZT27TAiZF8wfD6VW4-3Mqt52qQzIwZylTJERz-vAbAPsQ/exec"
 
+export const runtime = "edge"
+
 export async function POST(request: Request) {
   let body: Partial<DoctorCvPaymentPayload> = {}
 
