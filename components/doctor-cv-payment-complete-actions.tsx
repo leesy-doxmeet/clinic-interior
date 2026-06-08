@@ -24,7 +24,8 @@ export function DoctorCvPaymentCompleteActions({
     }
 
     try {
-      const channel = new BroadcastChannel("doctor-cv-payment")
+      const BroadcastChannelCtor = window.BroadcastChannel
+      const channel = new BroadcastChannelCtor("doctor-cv-payment")
       channel.postMessage(payload)
       channel.close()
     } catch {

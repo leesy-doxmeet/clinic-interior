@@ -20,6 +20,8 @@ export const metadata: Metadata = {
   description: "의사 CV 서비스 결제가 완료되었습니다.",
 }
 
+export const runtime = "edge"
+
 type DoctorCvPaymentSuccessPageProps = {
   searchParams: Promise<{
     type?: DoctorCvPaymentResultType
