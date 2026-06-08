@@ -107,7 +107,10 @@ const LANDING_CLOSING_POINTS = [
   '초기 입력 의료진 우선 제작',
 ];
 
-const RECURRING_PRICE_LABEL = '월 10,000원(부가세 포함)';
+const RECURRING_PRICE_LABEL = '월 10,000원 (부가세 포함)';
+const ONE_MONTH_PAYMENT_LABEL = '1개월 결제 10,000원(부가세 포함)';
+const PAYMENT_PLAN_RECURRING = 'recurring';
+const PAYMENT_PLAN_ONE_MONTH = 'one-month';
 
 const RECURRING_SERVICE_PROVISION_LABEL =
   '결제 완료 후 CV 제출·의료진 홈페이지 제공 · 이용 기간: 해당 회차 결제일 ~ 다음 회차 정기결제 전';
@@ -234,6 +237,7 @@ const state = {
   localOnly: false,
   identityBusy: false,
   submitBusy: false,
+  paymentPlan: PAYMENT_PLAN_RECURRING,
   pendingSaves: 0,
   confirmDialog: {
     open: false,
@@ -1747,19 +1751,64 @@ function renderComparisonRing(percent, tone, caption) {
   `;
 }
 
+function renderPaymentPlanOptions() {
+  const recurringChecked = state.paymentPlan === PAYMENT_PLAN_RECURRING;
+  const oneMonthChecked = state.paymentPlan === PAYMENT_PLAN_ONE_MONTH;
+
+  return `
+    <div class="payment-plan-options" role="radiogroup" aria-label="결제 방식 선택">
+      <p class="payment-plan-heading">결제 방식 선택</p>
+      <div class="payment-plan-grid">
+        <label class="payment-plan-card${recurringChecked ? ' is-selected' : ''}">
+          <input
+            class="payment-plan-input"
+            type="radio"
+            name="payment-plan"
+            value="${PAYMENT_PLAN_RECURRING}"
+            ${recurringChecked ? 'checked' : ''}
+            onchange="setPaymentPlan('${PAYMENT_PLAN_RECURRING}')">
+          <span class="payment-plan-check" aria-hidden="true"></span>
+          <span class="payment-plan-card-inner">
+            <span class="payment-plan-title">정기결제</span>
+            <span class="payment-plan-price">월 10,000원</span>
+            <span class="payment-plan-desc">부가세 포함 · 매월 자동 결제</span>
+          </span>
+        </label>
+        <label class="payment-plan-card${oneMonthChecked ? ' is-selected' : ''}">
+          <input
+            class="payment-plan-input"
+            type="radio"
+            name="payment-plan"
+            value="${PAYMENT_PLAN_ONE_MONTH}"
+            ${oneMonthChecked ? 'checked' : ''}
+            onchange="setPaymentPlan('${PAYMENT_PLAN_ONE_MONTH}')">
+          <span class="payment-plan-check" aria-hidden="true"></span>
+          <span class="payment-plan-card-inner">
+            <span class="payment-plan-title">1개월 결제</span>
+            <span class="payment-plan-price">10,000원</span>
+            <span class="payment-plan-desc">부가세 포함 · 1회 결제</span>
+          </span>
+        </label>
+      </div>
+    </div>
+  `;
+}
+
 function renderBottomBar() {
   const isSummary = state.currentStepKey === 'summary';
   const isFirstFlowStep = state.currentStepKey === FLOW_STEPS[0].key;
+  const showPaymentPlanOptions = isSummary && state.draft.status !== 'submitted';
   const primaryLabel = isSummary
     ? state.submitBusy
       ? '제출 중…'
       : state.draft.status === 'submitted'
         ? '수정 내용 다시 제출'
-        : `제출 완료하기 (${RECURRING_PRICE_LABEL})`
+        : '제출 완료하기'
     : '다음 단계';
 
   return `
-    <div class="bottom-bar">
+    <div class="bottom-bar${showPaymentPlanOptions ? ' bottom-bar-with-payment-plan' : ''}">
+      ${showPaymentPlanOptions ? renderPaymentPlanOptions() : ''}
       <div class="bottom-bar-inner">
         <button class="btn btn-secondary" type="button" onclick="goBack()" ${isFirstFlowStep || state.submitBusy ? 'disabled' : ''}>이전</button>
         <button class="btn btn-primary" type="button" onclick="goNext()" ${state.submitBusy ? 'disabled' : ''}>${primaryLabel}</button>
@@ -2380,8 +2429,11 @@ function handleSelectFieldChange(element) {
 
 function syncUiAfterRender() {
   const hasOverlay = !!(state.editor.open || state.confirmDialog.open);
+  const hasPaymentPlanBar =
+    state.currentStepKey === 'summary' && state.draft.status !== 'submitted';
   document.documentElement.classList.toggle('modal-open', hasOverlay);
   document.body.classList.toggle('modal-open', hasOverlay);
+  document.documentElement.classList.toggle('has-payment-plan-bar', hasPaymentPlanBar);
   applyStepperVisibility();
   restoreEditorViewport();
 }
@@ -3429,6 +3481,51 @@ function handlePaymentSuccessMessage(event) {
   triggerSubmitAfterPayment();
 }
 
+function setPaymentPlan(plan) {
+  if (plan !== PAYMENT_PLAN_RECURRING && plan !== PAYMENT_PLAN_ONE_MONTH) {
+    return;
+  }
+
+  state.paymentPlan = plan;
+  renderApp();
+}
+
+function openOneMonthPaymentWindow() {
+  syncCurrentStepFromDom();
+  cacheCurrentDraft('before-payment');
+  window.__DOCTOR_CV_PAYMENT_SUBMIT_TRIGGERED__ = false;
+
+  const params = new URLSearchParams();
+  if (state.draft && state.draft.draftId) {
+    params.set('draftId', String(state.draft.draftId));
+  }
+  if (state.draft && state.draft.identity && state.draft.identity.licenseNumber) {
+    params.set('licenseNumber', String(state.draft.identity.licenseNumber));
+  }
+  if (state.draft && state.draft.identity && state.draft.identity.name) {
+    params.set('name', String(state.draft.identity.name));
+  }
+  if (state.draft && state.draft.identity && state.draft.identity.phone) {
+    params.set('phone', String(state.draft.identity.phone));
+  }
+
+  const query = params.toString();
+  const paymentUrl = query
+    ? '/doctor-cv/payment/one-month?' + query
+    : '/doctor-cv/payment/one-month';
+  window.__DOCTOR_CV_PAYMENT_WINDOW__ = window.open(
+    paymentUrl,
+    'doctorCvOneMonthPayment',
+    'popup=yes,width=800,height=900'
+  );
+  state.notice = {
+    type: 'warning',
+    code: 'payment-pending',
+    message: '결제 창에서 결제를 완료하면 이 화면에서 CV 제출이 자동으로 진행됩니다.',
+  };
+  renderApp();
+}
+
 function openPaymentWindow() {
   syncCurrentStepFromDom();
   cacheCurrentDraft('before-payment');
@@ -3471,6 +3568,8 @@ async function goNext() {
   if (state.currentStepKey === 'summary') {
     if (state.draft.status === 'submitted') {
       await submitCurrentDraft();
+    } else if (state.paymentPlan === PAYMENT_PLAN_ONE_MONTH) {
+      openOneMonthPaymentWindow();
     } else {
       openPaymentWindow();
     }
@@ -4258,6 +4357,7 @@ window.startIntakeFromLanding = startIntakeFromLanding;
 window.handleIdentitySubmit = handleIdentitySubmit;
 window.goNext = goNext;
 window.goBack = goBack;
+window.setPaymentPlan = setPaymentPlan;
 window.goToStep = goToStep;
 window.setHomepagePreviewMode = setHomepagePreviewMode;
 window.openHomepagePreview = openHomepagePreview;
