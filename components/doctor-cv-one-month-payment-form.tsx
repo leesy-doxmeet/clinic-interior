@@ -17,34 +17,6 @@ import {
 
 type OneMonthPaymentMethod = "CARD" | "TRANSFER"
 
-declare global {
-  interface Window {
-    TossPayments?: (clientKey: string) => {
-      payment: (options: { customerKey: string }) => {
-        requestPayment: (params: {
-          method: OneMonthPaymentMethod
-          amount: { currency: "KRW"; value: number }
-          orderId: string
-          orderName: string
-          successUrl: string
-          failUrl: string
-          customerName?: string
-          card?: {
-            useEscrow: boolean
-            flowMode: "DEFAULT"
-            useCardPoint: boolean
-            useAppCardOnly: boolean
-          }
-          transfer?: {
-            cashReceipt: { type: "소득공제" }
-            useEscrow: boolean
-          }
-        }) => Promise<void>
-      }
-    }
-  }
-}
-
 function createCustomerKey() {
   return crypto.randomUUID().replace(/-/g, "")
 }

@@ -12,22 +12,6 @@ import {
   TOSS_PAYMENTS_CLIENT_KEY,
 } from "@/lib/doctor-cv-billing"
 
-declare global {
-  interface Window {
-    TossPayments?: (clientKey: string) => {
-      payment: (options: { customerKey: string }) => {
-        requestBillingAuth: (params: {
-          method: "CARD"
-          successUrl: string
-          failUrl: string
-          customerEmail?: string
-          customerName?: string
-        }) => Promise<void>
-      }
-    }
-  }
-}
-
 function createCustomerKey() {
   return crypto.randomUUID().replace(/-/g, "")
 }
